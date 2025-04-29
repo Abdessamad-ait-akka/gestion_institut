@@ -1,10 +1,8 @@
-import Login from './pages/Login';
+import AdminPanel from './pages/AdminPanel';
 
 function App() {
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#ffffff' }}>
-    <Login />
-    </div>
+    <AdminPanel />
   );
 }
 
