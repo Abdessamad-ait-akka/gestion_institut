@@ -1,9 +1,16 @@
-import AdminPanel from './pages/AdminPanel';
+import React, {useState } from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import AppRoutes from './routes/AppRoutes';
 
-function App() {
-  return (
-    <AdminPanel />
-  );
-}
+function App(){
+
+  const[userRole, setUserRole] = useState ('etudiant'); 
+  
+  return(
+    <BrowserRouter>
+    <AppRoutes userRole={userRole}/>
+    </BrowserRouter>
+  ); 
+};
 
 export default App;

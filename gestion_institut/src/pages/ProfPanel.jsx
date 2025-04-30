@@ -1,5 +1,10 @@
-<div>
-
-file-service + course-service
-
-</div>
+const ProfPanel = () => {
+    return (
+      <div>
+        <h1>Profpanel</h1>
+      </div>
+    );
+  };
+  
+  export default ProfPanel;
+  
