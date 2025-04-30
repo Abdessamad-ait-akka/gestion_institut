@@ -35,7 +35,7 @@ const styles = {
     },
 
     title: {
-        fontsize: '18px',
+        fontSize: '18px',
         margin: '10px 0 4px',
     },
     desc: {

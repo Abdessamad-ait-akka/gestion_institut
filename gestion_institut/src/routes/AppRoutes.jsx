@@ -17,7 +17,7 @@ const AppRoutes = ({ userRole }) => {
     return (
         <Routes>
             <Route path="/login" element={<Login/>} />
-                        
+
             <Route path="/" element={
                 userRole === 'admin' ? <Navigate to="/adminPanel"/>:
                 userRole === 'prof' ? <NAvigate to = "/prof"/>:

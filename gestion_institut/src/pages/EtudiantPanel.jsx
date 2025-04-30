@@ -7,7 +7,7 @@ const EtudiantPanel= () => {
     const navigate = useNavigate();
 
     return(
-        <div style={StyleSheet.container}>
+        <div style={styles.grid}>
             <DashboardCard
             icon={<MdEmail />}
             title="Messagerie"
@@ -49,10 +49,11 @@ const EtudiantPanel= () => {
     );
 };
 const styles = {
-    container: {
+    grid: {
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+        gridTemplateColumns: 'repeat(3, 1fr)',
         gap: '20px',
+        justifyItems: 'center',
         padding: '40px',
     },
 };
