@@ -12,6 +12,13 @@ import Calendrier from '../pages/Notes';
 import Cours from '../pages/cours';
 import Intervention from '../pages/Intervention';
 import Assistance from '../pages/Assistance';
+import DevoirProf from '../pages/devoirProf';
+import ProfNotes from '../pages/profNotes';
+import CoursProf from '../pages/coursProf';
+import Profdashboard from '../pages/Profdashboard';
+import ManageUsers from '../pages/ManageUsers';
+import EtudiantDashboard from '../pages/etudiantDashboard';
+
 
 const AppRoutes = ({ userRole }) => {
     return (
@@ -33,6 +40,16 @@ const AppRoutes = ({ userRole }) => {
             <Route path = "/intervention" element ={<Intervention/>}/>
             <Route path = "/assistance " element ={<Assistance />}/>
             <Route path ="/messagerie" element ={<Messagerie/>} />
+            <Route path="/prof" element={<ProfPanel/>}/>
+            <Route path= "/profNotes" element={<ProfNotes/>}/>
+            <Route path="/coursProf" element={<CoursProf/>}/>
+            <Route path="/devoirProf" element={<DevoirProf/>}/>
+            <Route path="/admin" element={<AdminPanel/>}/>
+            <Route path="/users" element={<ManageUsers/>}/>
+            <Route path= "/profDashboard" element ={<Profdashboard/>} />
+            <Route path = "etudiantDashboard" elemrnt ={<EtudiantDashboard/>}/>
+
+
 
 
             <Route path="*" element={<Navigate to ="/" />}/>

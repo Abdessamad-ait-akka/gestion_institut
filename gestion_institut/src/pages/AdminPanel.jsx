@@ -1,56 +1,45 @@
 import React from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
-import EtudiantDashboard from './etudiantDashboard';
-import ManageUsers from './ManageUsers';
-import ProfDashboard from './Profdashboard';
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
+import { useNavigate } from 'react-router-dom';
+import DashboardCard from '../components/DashboardCard';
+import { PiStudentBold,  } from 'react-icons/pi';
+import {GiTeacher} from 'react-icons/gi';
+import {IoIosPeople} from 'react-icons/io';
 
+const AdminPanel= () => {
+  const navigate= useNavigate();
 
-const DashboardNav = () => {
-  const navigate = useNavigate();
-  return (
-    <div style={{ display: 'flex', justifyContent: 'center', gap: 20, marginTop: 40 }}>
-      <button style={styles.button} onClick={() => navigate('/etudiants')}>Etudiant Dashboard</button>
-      <button style={styles.button} onClick={() => navigate('/enseignant')}>Enseignant Dashboard</button>
-      <button style={styles.button} onClick={() => navigate('/manageUsers')}>Manage Users</button>
+  return(
+    <div style= {styles.grid}>
+      <DashboardCard
+      icon={<PiStudentBold/>}
+      title="Etudiants"
+      decription="Gerer les etudiants"
+      onClick ={()=> navigate('/etudiantDashboard')}
+      />
+      <DashboardCard
+      icon={<GiTeacher/>}
+      title="Les Profs"
+      description="Gerer les Profs"
+      onClick={()=> navigate('/profDashboard')}
+      />
+      <DashboardCard
+      icon={<IoIosPeople/>}
+      title="Users"
+      description="Gerer les utilisateurs"
+      onClick = {() => navigate('/users')}
+      />
     </div>
   );
 };
 
-const AdminPanel = () => {
-  return (
-    <>
-      <DashboardNav />
-      <div style={{ padding: 20 }}>
-        <Routes>
-          <Route path="/etudiants" element={<EtudiantDashboard />} />
-          <Route path="/enseignant" element={<ProfDashboard />} />
-          <Route path="/manageUsers" element={<ManageUsers />} />
-        </Routes>
-      </div>
-    </>
-  );
+const styles = {
+  grid: {
+    dipslay: 'gris',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: '20px',
+    justifyItems: 'center',
+    padding: '40px',
+  },
 };
 
-const styles = {
-    navbar: {
-      display: 'flex',
-      justifyContent: 'space-around',
-      background: '#f0f0f0',
-      padding: '12px 0',
-      borderBottom: '1px solid #ddd',
-    },
-    link: {
-      textDecoration: 'none',
-      color: '#333',
-      fontSize: 16,
-      display: 'flex',
-      alignItems: 'center',
-      gap: 6,
-    },
-  };
-  
   export default AdminPanel;
