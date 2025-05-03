@@ -47,7 +47,7 @@ const AppRoutes = ({ userRole }) => {
             <Route path="/admin" element={<AdminPanel/>}/>
             <Route path="/users" element={<ManageUsers/>}/>
             <Route path= "/profDashboard" element ={<Profdashboard/>} />
-            <Route path = "etudiantDashboard" elemrnt ={<EtudiantDashboard/>}/>
+            <Route path = "/etudiantDashboard" elemrnt ={<EtudiantDashboard/>}/>
 
 
 
