@@ -72,7 +72,7 @@ const EtudiantDashboard = () => {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer cet étudiant ?')) {
+    if (window.confirm('Etes vous sur de supprimer cet Etudiant')) {
       setRows(rows.filter((row) => row.id !== id));
     }
   };
@@ -83,6 +83,7 @@ const EtudiantDashboard = () => {
     { field: 'prenom', headerName: 'Prénom', width: 130 },
     { field: 'cin', headerName: 'CIN', width: 130 },
     { field: 'filiere', headerName: 'Filière', width: 160 },
+    { field: 'email' , headerName: 'Email', width: 160},
     {
       field: 'actions',
       headerName: 'Actions',
