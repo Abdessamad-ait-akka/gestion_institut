@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>mustaard</title>
+</head>
+<body>{% if session %}
+    <h1>Bienvenue, {{ session.userinfo.preferred_username }}</h1>
+    <p><a href="/logout">Logoutttt</a></p>
+    {{session.access_token}}
+    <div><pre>{{pretty}}</pre></div>
+    {% else %}
+    <p><a href="/login">Loginnn</a></p>
+        {% endif %}
+</body>
+</html>
