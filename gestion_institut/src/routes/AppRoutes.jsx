@@ -9,7 +9,7 @@ import Messagerie from '../pages/Messagerie.jsx';
 
 import Notes from '../pages/Notes';
 import Calendrier from '../pages/Notes';
-import Cours from '../pages/cours';
+import Cours from '../pages/Cours';
 import Intervention from '../pages/Intervention';
 import Assistance from '../pages/Assistance';
 import DevoirProf from '../pages/devoirProf';
@@ -47,7 +47,7 @@ const AppRoutes = ({ userRole }) => {
             <Route path="/admin" element={<AdminPanel/>}/>
             <Route path="/users" element={<ManageUsers/>}/>
             <Route path= "/profDashboard" element ={<Profdashboard/>} />
-            <Route path = "/etudiantDashboard" elemrnt ={<EtudiantDashboard/>}/>
+            <Route path = "/etudiantDashboard" element ={<EtudiantDashboard/>}/>
 
 
 
