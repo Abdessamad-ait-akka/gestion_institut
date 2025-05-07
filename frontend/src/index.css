@@ -1,0 +1,26 @@
+/* Fond noir du calendrier */
+.fc {
+    background-color: rgba(92, 247, 123, 0.273);
+    color: rgb(216, 37, 118); /* texte blanc pour la lisibilité */
+    font-weight: 900;
+    font-style: oblique;
+    margin: 10px;
+  }
+  
+  /* Couleur des cases avec événement passé */
+  .fc-daygrid-day.past-event-day {
+    background-color: rgba(249, 40, 40, 0.756) !important;
+    color: white;
+    font-size: larger;
+
+
+  }
+  
+  /* Couleur des cases avec événement futur */
+  .fc-daygrid-day.future-event-day {
+    background-color: rgba(38, 232, 38, 0.887) !important;
+    font-size: larger;
+    color: white;
+
+  }
+  
