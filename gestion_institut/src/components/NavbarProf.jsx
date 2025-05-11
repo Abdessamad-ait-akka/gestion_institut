@@ -4,17 +4,15 @@ import { Link, useLocation } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import SchoolIcon from "@mui/icons-material/School";
 
+// Liens spécifiques pour l’interface professeur
 const navLinks = [
-  { path: "/etudiant", label: "Accueil" },
-  { path: "/notes", label: "Notes" },
-  { path: "/cours", label: "Cours" },
-  { path: "/calendrier", label: "Calendrier" },
-  { path: "/messagerie", label: "Messagerie" },
-  { path: "/intervention", label: "Intervention" },
-  { path: "/assistance", label: "Assistance" },
+  { path: "/prof", label: "Accueil" },
+  { path: "/coursprof", label: "Cours" },
+  { path: "/devoirProf", label: "Devoirs" },
+  { path: "/profNotes", label: "Notes" },
 ];
 
-const Navbar = () => {
+const NavbarProf = () => {
   const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -41,7 +39,7 @@ const Navbar = () => {
                 WebkitTextFillColor: "transparent",
               }}
             >
-              ENT ESTS
+              Espace Professeur
             </Typography>
           </Box>
 
@@ -90,4 +88,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default NavbarProf;

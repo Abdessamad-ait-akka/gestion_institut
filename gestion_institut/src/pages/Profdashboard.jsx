@@ -63,7 +63,7 @@ const ProfDashboard = ()=>{
   };
   const handleSave= () =>{
     if(editingId ){
-      setRows(rows.map((row)=>(row.id === editingId ? { ...form, id: edittingId }: row)));
+      setRows(rows.map((row)=>(row.id === editingId ? { ...form, id: editingId }: row)));
 
     }else{
       setRows([...rows, { ...form, id: Date.now() }]);
@@ -85,7 +85,7 @@ const ProfDashboard = ()=>{
     {
       field:'action',
       headerName: 'Action',
-      width: 250,
+      width: 300,
       renderCell: (params)=>(
         <>
         <MyButton

@@ -1,61 +1,65 @@
 import React from 'react';
-import { Routes , Route, Navigate} from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 import Login from '../pages/Login';
 import EtudiantPanel from '../pages/EtudiantPanel';
 import AdminPanel from '../pages/AdminPanel';
 import ProfPanel from '../pages/ProfPanel';
-import Messagerie from '../pages/Messagerie.jsx';
-
+import Messagerie from '../pages/Messagerie';
 import Notes from '../pages/Notes';
-import Calendrier from '../pages/Notes';
+import Calendrier from '../pages/Calendrier';
 import Cours from '../pages/Cours';
 import Intervention from '../pages/Intervention';
 import Assistance from '../pages/Assistance';
 import DevoirProf from '../pages/devoirProf';
-import ProfNotes from '../pages/profNotes';
+import ProfNotes from '../pages/ProfNotes';
 import CoursProf from '../pages/coursProf';
 import Profdashboard from '../pages/Profdashboard';
 import ManageUsers from '../pages/ManageUsers';
 import EtudiantDashboard from '../pages/etudiantDashboard';
 
+import EtudiantLayout from '../layouts/EtudiantLayout';
+import ProfLayout from '../layouts/ProfLayout';
 
 const AppRoutes = ({ userRole }) => {
-    return (
-        <Routes>
-            <Route path="/login" element={<Login/>} />
+  return (
+    <Routes>
+      <Route path="/login" element={<Login />} />
 
-            <Route path="/" element={
-                userRole === 'admin' ? <Navigate to="/adminPanel"/>:
-                userRole === 'prof' ? <NAvigate to = "/prof"/>:
-                userRole === 'etudiant' ? <Navigate to="/etudiant"/>:
-                <Navigate to="/login"/>
-            } />
+      <Route
+        path="/"
+        element={
+          userRole === 'admin' ? <Navigate to="/admin" /> :
+          userRole === 'prof' ? <Navigate to="/prof" /> :
+          userRole === 'etudiant' ? <Navigate to="/etudiant" /> :
+          <Navigate to="/login" />
+        }
+      />
 
+      {/* Étudiant */}
+      <Route path="/etudiant" element={<EtudiantLayout><EtudiantPanel /></EtudiantLayout>} />
+      <Route path="/notes" element={<EtudiantLayout><Notes /></EtudiantLayout>} />
+      <Route path="/calendrier" element={<EtudiantLayout><Calendrier /></EtudiantLayout>} />
+      <Route path="/cours" element={<EtudiantLayout><Cours /></EtudiantLayout>} />
+      <Route path="/intervention" element={<EtudiantLayout><Intervention /></EtudiantLayout>} />
+      <Route path="/assistance" element={<EtudiantLayout><Assistance /></EtudiantLayout>} />
+      <Route path="/messagerie" element={<EtudiantLayout><Messagerie /></EtudiantLayout>} />
 
-            <Route path="/etudiant" element={<EtudiantPanel/>} />
-            <Route path="/notes" element ={<Notes/>}/>
-            <Route path="/calendrier" element ={<Calendrier/>} />
-            <Route path= "/cours" element ={<Cours/>}/>
-            <Route path = "/intervention" element ={<Intervention/>}/>
-            <Route path = "/assistance " element ={<Assistance />}/>
-            <Route path ="/messagerie" element ={<Messagerie/>} />
-            <Route path="/prof" element={<ProfPanel/>}/>
-            <Route path= "/profNotes" element={<ProfNotes/>}/>
-            <Route path="/coursProf" element={<CoursProf/>}/>
-            <Route path="/devoirProf" element={<DevoirProf/>}/>
-            <Route path="/admin" element={<AdminPanel/>}/>
-            <Route path="/users" element={<ManageUsers/>}/>
-            <Route path= "/profDashboard" element ={<Profdashboard/>} />
-            <Route path = "/etudiantDashboard" element ={<EtudiantDashboard/>}/>
+      {/* Prof */}
+      <Route path="/prof" element={<ProfLayout><ProfPanel /></ProfLayout>} />
+      <Route path="/profNotes" element={<ProfLayout><ProfNotes /></ProfLayout>} />
+      <Route path="/coursprof" element={<ProfLayout><CoursProf /></ProfLayout>} />
+      <Route path="/devoirProf" element={<ProfLayout><DevoirProf /></ProfLayout>} />
+      <Route path="/profDashboard" element={<ProfLayout><Profdashboard /></ProfLayout>} />
 
+      {/* Admin */}
+      <Route path="/admin" element={<EtudiantLayout><AdminPanel /></EtudiantLayout>} />
+      <Route path="/users" element={<EtudiantLayout><ManageUsers /></EtudiantLayout>} />
+      <Route path="/etudiantDashboard" element={<EtudiantLayout><EtudiantDashboard /></EtudiantLayout>} />
 
-
-
-            <Route path="*" element={<Navigate to ="/" />}/>
-
-        </Routes>
-    );
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
+  );
 };
 
 export default AppRoutes;
