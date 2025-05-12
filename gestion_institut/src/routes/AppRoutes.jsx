@@ -20,6 +20,7 @@ import EtudiantDashboard from '../pages/etudiantDashboard';
 
 import EtudiantLayout from '../layouts/EtudiantLayout';
 import ProfLayout from '../layouts/ProfLayout';
+import AdminLayout from '../Layouts/AdminLayout';
 
 const AppRoutes = ({ userRole }) => {
   return (
@@ -50,13 +51,13 @@ const AppRoutes = ({ userRole }) => {
       <Route path="/profNotes" element={<ProfLayout><ProfNotes /></ProfLayout>} />
       <Route path="/coursprof" element={<ProfLayout><CoursProf /></ProfLayout>} />
       <Route path="/devoirProf" element={<ProfLayout><DevoirProf /></ProfLayout>} />
-      <Route path="/profDashboard" element={<ProfLayout><Profdashboard /></ProfLayout>} />
+
 
       {/* Admin */}
-      <Route path="/admin" element={<EtudiantLayout><AdminPanel /></EtudiantLayout>} />
-      <Route path="/users" element={<EtudiantLayout><ManageUsers /></EtudiantLayout>} />
-      <Route path="/etudiantDashboard" element={<EtudiantLayout><EtudiantDashboard /></EtudiantLayout>} />
-
+      <Route path="/admin" element={<AdminLayout><AdminPanel /></AdminLayout>} />
+      <Route path="/users" element={<AdminLayout><ManageUsers /></AdminLayout>} />
+      <Route path="/etudiantDashboard" element={<AdminLayout><EtudiantDashboard /></AdminLayout>} />
+      <Route path="/profDashboard" element={<AdminLayout><Profdashboard /></AdminLayout>} />        
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );

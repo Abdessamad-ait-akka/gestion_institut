@@ -40,7 +40,7 @@ const DeleteButton = styled(Button)({
 const ProfDashboard = ()=>{
   const [rows, setRows] = React.useState(initialRows);
   const [open, setOpen] = React.useState(false);
-  const [form, setForm] = React.useState({nom:'', prenom:'', cin:'', email:''});
+  const [form, setForm] = React.useState({nom:'', prenom:'', cin:'', email:'', fliliere:'', groupe:'', password:''});
   const [editingId, setEditingId] = React.useState(null);
 
   const handleOpen = (row = null) =>{
@@ -49,7 +49,7 @@ const ProfDashboard = ()=>{
       setEditingId(row.id);
 
     }else{
-      setForm({nom:'', prenom:'', cin:'', email:''});
+      setForm({nom:'', prenom:'', cin:'', email:'', fliliere:'', groupe:'', password:''});
       setEditingId(null);
     }
     setOpen(true);
@@ -82,6 +82,9 @@ const ProfDashboard = ()=>{
     { field: 'prenom', headerName: 'Prénom', width: 130 },
     { field: 'cin', headerName: 'CIN', width: 130 },
     { field: 'email', headerName: 'Email', width: 160 },
+    { field: 'filiere', headerName: 'Fliére', width:130},
+    { filed: 'groupe', headerName: 'Groupe', width: 130},
+    { field : 'password', headerName: 'Password', width: 130},
     {
       field:'action',
       headerName: 'Action',
@@ -167,6 +170,33 @@ const ProfDashboard = ()=>{
           label="email"
           fullWidth
           value={form.email}
+          onChange={handleChange}
+          sx={{ mb:2 }}
+          />
+          <TextField
+          margin="dense"
+          name="filiere"
+          label="filiere"
+          fullWidth
+          value={form.filiere}
+          onChange={handleChange}
+          sx={{ mb:2 }}
+          />
+          <TextField
+          margin="dense"
+          name="groupe"
+          label="groupe"
+          fullWidth
+          value={form.groupe}
+          onChange={handleChange}
+          sx={{ mb:2 }}
+          />
+          <TextField
+          margin="dense"
+          name="password"
+          label="password"
+          fullWidth
+          value={form.password}
           onChange={handleChange}
           sx={{ mb:2 }}
           />
