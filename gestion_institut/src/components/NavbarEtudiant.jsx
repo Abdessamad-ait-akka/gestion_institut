@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   AppBar,
@@ -15,20 +16,22 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogContentText,
   DialogActions,
   Button,
-  styled
+  styled,
+  DialogContentText,
 } from "@mui/material";
+
 import {
   Menu as MenuIcon,
   Close as CloseIcon,
   KeyboardArrowDown,
   Notifications,
   Message,
-  Logout
+  Logout,
 } from "@mui/icons-material";
 
+// CORRECTION: AppBAr → AppBar
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   backgroundColor: "#0c2340",
   boxShadow: theme.shadows[4],
@@ -43,25 +46,27 @@ const AnimatedMenuIcon = styled(IconButton)(({ theme }) => ({
     duration: theme.transitions.duration.shortest,
   }),
   "&:hover": {
-    backgroundColor: "rgba(255, 255, 255, 0.1)"
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
   },
 }));
 
-const Navbar = ({ onMenuToggle, isMenuOpen }) => {
+const NavbarEtudiant = ({ onMenuToggle, isMenuOpen }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorNotif, setAnchorNotif] = useState(null);
   const [anchorMsg, setAnchorMsg] = useState(null);
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
-  const user = { username: "Etudiant X" };
+  const user = { username: "Administrateur" };
   const organizationName = "ENT ESTS";
+
   const notifications = [
-    { label: "Nouvelle note ajoutée", secondary: "il y a 5 min" },
-    { label: "Devoir corrigé", secondary: "il y a 10 min" },
+    { label: "Nouvel étudiant", secondary: "il y a 3 min" },
+    { label: "Nouveau prof", secondary: "il y a 3 min" },
   ];
+
   const messages = [
-    { label: "Message de l'administration", secondary: "il y a 2 min" },
-    { label: "Nouveau message Prof", secondary: "il y a 12 min" },
+    { label: "Message de prof Imad", secondary: "il y a 2h" },
+    { label: "Message de étudiant Imad", secondary: "il y a 2h" },
   ];
 
   const handleMenuOpen = (setter) => (e) => setter(e.currentTarget);
@@ -76,14 +81,9 @@ const Navbar = ({ onMenuToggle, isMenuOpen }) => {
     <>
       <StyledAppBar position="fixed">
         <Toolbar sx={{ justifyContent: "space-between" }}>
-          {/* Section gauche : bouton menu + titre */}
+          {/* Gauche : hamburger + titre */}
           <Stack direction="row" alignItems="center" spacing={2}>
-            <AnimatedMenuIcon
-              onClick={onMenuToggle}
-              size="large"
-              aria-label="Basculer le menu"
-              sx={{ color: "white" }}
-            >
+            <AnimatedMenuIcon onClick={onMenuToggle} size="large" sx={{ color: "white" }}>
               {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
             </AnimatedMenuIcon>
             <Typography variant="h6" sx={{ fontWeight: 700, color: "#fff" }}>
@@ -91,7 +91,7 @@ const Navbar = ({ onMenuToggle, isMenuOpen }) => {
             </Typography>
           </Stack>
 
-          {/* Section droite : notifications, messages, profil */}
+          {/* Droite : messages, notifications, profil */}
           <Stack direction="row" spacing={3} alignItems="center">
             {/* Messages */}
             <IconButton onClick={handleMenuOpen(setAnchorMsg)} sx={{ color: "white" }}>
@@ -139,7 +139,7 @@ const Navbar = ({ onMenuToggle, isMenuOpen }) => {
               ))}
             </Menu>
 
-            {/* Profil utilisateur */}
+            {/* Profil */}
             <Stack
               direction="row"
               alignItems="center"
@@ -149,7 +149,7 @@ const Navbar = ({ onMenuToggle, isMenuOpen }) => {
                 cursor: "pointer",
                 p: 1,
                 borderRadius: 1,
-                "&:hover": { backgroundColor: "rgba(255,255,255,0.1)" }
+                "&:hover": { backgroundColor: "rgba(255,255,255,0.1)" },
               }}
             >
               <Avatar
@@ -159,7 +159,7 @@ const Navbar = ({ onMenuToggle, isMenuOpen }) => {
                   width: 34,
                   height: 34,
                   fontSize: 16,
-                  fontWeight: 700
+                  fontWeight: 700,
                 }}
               >
                 {user.username.charAt(0)}
@@ -179,7 +179,7 @@ const Navbar = ({ onMenuToggle, isMenuOpen }) => {
               anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
               <MenuItem>
-                <ListItemText primary="Mon profil" />
+                <ListItemText primary="Mon Profil" />
               </MenuItem>
               <MenuItem>
                 <ListItemText primary="Paramètres" />
@@ -196,7 +196,7 @@ const Navbar = ({ onMenuToggle, isMenuOpen }) => {
         </Toolbar>
       </StyledAppBar>
 
-      {/* Dialogue déconnexion */}
+      {/* Dialog de déconnexion */}
       <Dialog
         open={logoutDialogOpen}
         onClose={() => setLogoutDialogOpen(false)}
@@ -206,7 +206,7 @@ const Navbar = ({ onMenuToggle, isMenuOpen }) => {
         <DialogTitle>Confirmation de déconnexion</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            
+            Êtes-vous sûr de vouloir vous déconnecter ?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -224,4 +224,4 @@ const Navbar = ({ onMenuToggle, isMenuOpen }) => {
   );
 };
 
-export default Navbar;
+export default NavbarEtudiant;
