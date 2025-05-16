@@ -1,92 +1,226 @@
-import React from "react";
-import { AppBar, Toolbar, Typography, Button, Box, useTheme, useMediaQuery } from "@mui/material";
-import { Link, useLocation } from "react-router-dom";
-import { motion, useScroll, useTransform } from "framer-motion";
-import SchoolIcon from "@mui/icons-material/School";
+import React, { useState } from "react";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Stack,
+  Avatar,
+  Badge,
+  Menu,
+  MenuItem,
+  Divider,
+  ListItemIcon,
+  ListItemText,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
+  styled
+} from "@mui/material";
+import {
+  Menu as MenuIcon,
+  Close as CloseIcon,
+  KeyboardArrowDown,
+  Notifications,
+  Message,
+  Logout
+} from "@mui/icons-material";
 
-const navLinks = [
-  { path: "/etudiant", label: "Accueil" },
-  { path: "/notes", label: "Notes" },
-  { path: "/cours", label: "Cours" },
-  { path: "/calendrier", label: "Calendrier" },
-  { path: "/messagerie", label: "Messagerie" },
-  { path: "/intervention", label: "Intervention" },
-  { path: "/assistance", label: "Assistance" },
-];
+const StyledAppBar = styled(AppBar)(({ theme }) => ({
+  backgroundColor: "#0c2340",
+  boxShadow: theme.shadows[4],
+  transition: theme.transitions.create(["margin", "width"], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+}));
 
-const Navbar = () => {
-  const location = useLocation();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const { scrollY } = useScroll();
-  const backgroundColor = useTransform(
-    scrollY,
-    [0, 100],
-    ["rgba(13, 36, 66, 0.95)", "rgba(13, 36, 66, 1)"]
-  );
+const AnimatedMenuIcon = styled(IconButton)(({ theme }) => ({
+  transition: theme.transitions.create("transform", {
+    duration: theme.transitions.duration.shortest,
+  }),
+  "&:hover": {
+    backgroundColor: "rgba(255, 255, 255, 0.1)"
+  },
+}));
+
+const Navbar = ({ onMenuToggle, isMenuOpen }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorNotif, setAnchorNotif] = useState(null);
+  const [anchorMsg, setAnchorMsg] = useState(null);
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+
+  const user = { username: "ProfesseurX" };
+  const organizationName = "ENT ESTS";
+  const notifications = [
+    { label: "Nouvelle note ajoutée", secondary: "il y a 5 min" },
+    { label: "Devoir corrigé", secondary: "il y a 10 min" },
+  ];
+  const messages = [
+    { label: "Message de l'administration", secondary: "il y a 2 min" },
+    { label: "Nouveau message étudiant", secondary: "il y a 12 min" },
+  ];
+
+  const handleMenuOpen = (setter) => (e) => setter(e.currentTarget);
+  const handleMenuClose = (setter) => () => setter(null);
+
+  const handleLogout = () => {
+    handleMenuClose(setAnchorEl)();
+    setLogoutDialogOpen(true);
+  };
 
   return (
-    <motion.div style={{ backgroundColor }}>
-      <AppBar position="fixed" color="transparent" elevation={0} sx={{ backdropFilter: "blur(8px)" }}>
-        <Toolbar sx={{ justifyContent: "space-between", maxWidth: 1280, mx: "auto", width: "100%" }}>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-            <SchoolIcon sx={{ fontSize: 32, color: theme.palette.secondary.main }} />
-            <Typography
-              variant="h6"
+    <>
+      <StyledAppBar position="fixed">
+        <Toolbar sx={{ justifyContent: "space-between" }}>
+          {/* Section gauche : bouton menu + titre */}
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <AnimatedMenuIcon
+              onClick={onMenuToggle}
+              size="large"
+              aria-label="Basculer le menu"
+              sx={{ color: "white" }}
+            >
+              {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
+            </AnimatedMenuIcon>
+            <Typography variant="h6" sx={{ fontWeight: 700, color: "#fff" }}>
+              {organizationName}
+            </Typography>
+          </Stack>
+
+          {/* Section droite : notifications, messages, profil */}
+          <Stack direction="row" spacing={3} alignItems="center">
+            {/* Messages */}
+            <IconButton onClick={handleMenuOpen(setAnchorMsg)} sx={{ color: "white" }}>
+              <Badge badgeContent={messages.length} color="error">
+                <Message />
+              </Badge>
+            </IconButton>
+            <Menu
+              anchorEl={anchorMsg}
+              open={Boolean(anchorMsg)}
+              onClose={handleMenuClose(setAnchorMsg)}
+              PaperProps={{ sx: { minWidth: 300 } }}
+            >
+              {messages.map((msg, i) => (
+                <MenuItem key={i} dense>
+                  <ListItemText
+                    primary={msg.label}
+                    secondary={msg.secondary}
+                    primaryTypographyProps={{ variant: "body2" }}
+                  />
+                </MenuItem>
+              ))}
+            </Menu>
+
+            {/* Notifications */}
+            <IconButton onClick={handleMenuOpen(setAnchorNotif)} sx={{ color: "white" }}>
+              <Badge badgeContent={notifications.length} color="error">
+                <Notifications />
+              </Badge>
+            </IconButton>
+            <Menu
+              anchorEl={anchorNotif}
+              open={Boolean(anchorNotif)}
+              onClose={handleMenuClose(setAnchorNotif)}
+              PaperProps={{ sx: { minWidth: 300 } }}
+            >
+              {notifications.map((notif, i) => (
+                <MenuItem key={i} dense>
+                  <ListItemText
+                    primary={notif.label}
+                    secondary={notif.secondary}
+                    primaryTypographyProps={{ variant: "body2" }}
+                  />
+                </MenuItem>
+              ))}
+            </Menu>
+
+            {/* Profil utilisateur */}
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={1}
+              onClick={handleMenuOpen(setAnchorEl)}
               sx={{
-                fontWeight: 700,
-                letterSpacing: "-0.5px",
-                background: `linear-gradient(45deg, ${theme.palette.secondary.main} 30%, ${theme.palette.primary.main} 90%)`,
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
+                cursor: "pointer",
+                p: 1,
+                borderRadius: 1,
+                "&:hover": { backgroundColor: "rgba(255,255,255,0.1)" }
               }}
             >
-              ENT ESTS
-            </Typography>
-          </Box>
+              <Avatar
+                sx={{
+                  bgcolor: "white",
+                  color: "#0c2340",
+                  width: 34,
+                  height: 34,
+                  fontSize: 16,
+                  fontWeight: 700
+                }}
+              >
+                {user.username.charAt(0)}
+              </Avatar>
+              <Typography variant="subtitle1" sx={{ color: "white" }}>
+                {user.username}
+              </Typography>
+              <KeyboardArrowDown sx={{ color: "white" }} />
+            </Stack>
 
-          <Box sx={{ display: "flex", gap: 1 }}>
-            {navLinks.map((link) => {
-              const isActive = location.pathname === link.path;
-              return (
-                <Button
-                  key={link.path}
-                  component={Link}
-                  to={link.path}
-                  variant="text"
-                  sx={{
-                    position: "relative",
-                    color: isActive ? theme.palette.secondary.main : "#e0e0e0",
-                    textTransform: "none",
-                    fontWeight: 500,
-                    letterSpacing: "0.5px",
-                    "&:hover": {
-                      backgroundColor: "rgba(255, 255, 255, 0.05)",
-                    },
-                  }}
-                >
-                  {link.label}
-                  {isActive && (
-                    <motion.div
-                      layoutId="underline"
-                      style={{
-                        position: "absolute",
-                        bottom: 4,
-                        left: 0,
-                        right: 0,
-                        height: 2,
-                        backgroundColor: theme.palette.secondary.main,
-                      }}
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                    />
-                  )}
-                </Button>
-              );
-            })}
-          </Box>
+            {/* Menu Profil */}
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose(setAnchorEl)}
+              transformOrigin={{ horizontal: "right", vertical: "top" }}
+              anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+            >
+              <MenuItem>
+                <ListItemText primary="Mon profil" />
+              </MenuItem>
+              <MenuItem>
+                <ListItemText primary="Paramètres" />
+              </MenuItem>
+              <Divider />
+              <MenuItem onClick={handleLogout}>
+                <ListItemIcon>
+                  <Logout fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="Déconnexion" />
+              </MenuItem>
+            </Menu>
+          </Stack>
         </Toolbar>
-      </AppBar>
-    </motion.div>
+      </StyledAppBar>
+
+      {/* Dialogue déconnexion */}
+      <Dialog
+        open={logoutDialogOpen}
+        onClose={() => setLogoutDialogOpen(false)}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle>Confirmation de déconnexion</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Êtes-vous sûr de vouloir vous déconnecter ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setLogoutDialogOpen(false)}>Annuler</Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => (window.location.href = "/logout")}
+          >
+            Confirmer
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 

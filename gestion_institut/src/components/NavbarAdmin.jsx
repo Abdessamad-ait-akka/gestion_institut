@@ -7,8 +7,8 @@ import SchoolIcon from "@mui/icons-material/School";
 // Liens spécifiques pour l’interface professeur
 const navLinks = [
   { path: "/admin", label: "Accueil" },
-  { path: "/EtudiantDashboard", label: "Etudiant" },
-  { path: "/ProfDashboard", label: "Prof" },
+  { path: "/etudiantDashboard", label: "Etudiant" },
+  { path: "/profDashboard", label: "Prof" },
   { path: "/users", label: "Users" },
 ];
 

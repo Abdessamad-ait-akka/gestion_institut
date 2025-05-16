@@ -16,7 +16,7 @@ import ProfNotes from '../pages/ProfNotes';
 import CoursProf from '../pages/coursProf';
 import Profdashboard from '../pages/Profdashboard';
 import ManageUsers from '../pages/ManageUsers';
-import EtudiantDashboard from '../pages/etudiantDashboard';
+import EtudiantDashboard from '../pages/EtudiantDashboard';
 
 import EtudiantLayout from '../layouts/EtudiantLayout';
 import ProfLayout from '../layouts/ProfLayout';
@@ -51,7 +51,6 @@ const AppRoutes = ({ userRole }) => {
       <Route path="/profNotes" element={<ProfLayout><ProfNotes /></ProfLayout>} />
       <Route path="/coursprof" element={<ProfLayout><CoursProf /></ProfLayout>} />
       <Route path="/devoirProf" element={<ProfLayout><DevoirProf /></ProfLayout>} />
-
 
       {/* Admin */}
       <Route path="/admin" element={<AdminLayout><AdminPanel /></AdminLayout>} />
