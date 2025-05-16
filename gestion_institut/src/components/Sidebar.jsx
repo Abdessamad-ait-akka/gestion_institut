@@ -63,7 +63,6 @@ const Sidebar = ({ isOpen, onToggle }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [expandedItems, setExpandedItems] = useState({});
-
   const menuItems = useMemo(() => getAdminMenuItems(), []);
 
   const toggleExpanded = useCallback((text, e) => {
