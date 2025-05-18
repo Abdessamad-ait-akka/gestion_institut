@@ -1,10 +1,15 @@
 /* Fond noir du calendrier */
+.active-link {
+  background: linear-gradient(135deg, #2563eb, #1e40af); /* du bleu */
+  color: white;
+  font-weight: bold;
+}
+
 .fc {
     background-color: rgba(92, 247, 123, 0.273);
     color: rgb(216, 37, 118); /* texte blanc pour la lisibilité */
     font-weight: 900;
     font-style: oblique;
-    margin: 10px;
   }
   
   /* Couleur des cases avec événement passé */
@@ -22,5 +27,63 @@
     font-size: larger;
     color: white;
 
+  }
+
+
+
+  /* Fond du calendrier */
+.fc {
+  background-color: rgba(92, 247, 123, 0.273);
+  color: rgb(216, 37, 118);
+  font-weight: 900;
+  font-style: oblique;
+  margin: 10px;
+}
+
+
+
+
+
+/* Animation */
+@keyframes wave {
+  0%, 100% {
+      transform: scaleY(1);
+  }
+  50% {
+      transform: scaleY(1.8);
+  }
+}
+
+
+
+
+
+
+
+
+
+.animate-wave {
+  animation: wave 1s infinite ease-in-out;
+}
+
+  
+
+
+
+
+
+
+
+  @keyframes wave {
+    0%, 100% {
+      transform: scaleY(1);
+    }
+    50% {
+      transform: scaleY(1.8);
+    }
+  }
+  
+  .animate-wave {
+    animation: wave 1s infinite ease-in-out;
   }
   

@@ -1,76 +1,94 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5001';
+const API_URL = 'http://localhost:5001/api/cours';
 
-// Fonction pour obtenir la liste des cours
-export const getCoursList = async () => {
-  const token = localStorage.getItem('token');
-  try {
-    const response = await axios.get(`${API_URL}/cours`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Erreur lors de la récupération des cours:', error);
-    throw error;
-  }
+export const uploadCours = async (data) => {
+  const res = await axios.post(API_URL, data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return res.data;
 };
 
-// Fonction pour uploader un cours
-export const uploadCours = async (formData) => {
-  const token = localStorage.getItem('token');
-  try {
-    const response = await axios.post(`${API_URL}/cours`, formData, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Erreur lors de l\'upload du cours:', error);
-    throw error;
-  }
+export const getCoursByUser = async (userId) => {
+  const res = await axios.get(`${API_URL}/${userId}`);
+  return res.data;
 };
 
- export const deleteFichier = async (coursId) => {
-  const token = localStorage.getItem('token');
-  try {
-    const response = await axios.delete(`${API_URL}/cours/${coursId}/fichier`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
-    console.log('Réponse du serveur:', response.data); // Vérifier la réponse
-    return response.data;
-  } catch (error) {
-    console.error('Erreur du serveur:', error.response?.data || error.message);
-    throw error;
-  }
+export const getCoursByEtudiant = async (etudiantId) => {
+  const res = await axios.get(`${API_URL}/etudiant/${etudiantId}`);
+  return res.data;
 };
 
 
-// Fonction pour télécharger un fichier de cours
-export const downloadCours = async (filename) => {
-  const token = localStorage.getItem('token');
-  try {
-    const response = await axios.get(`${API_URL}/cours/download/${filename}`, {
-      responseType: 'blob',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
 
-    const url = window.URL.createObjectURL(new Blob([response.data]));
+
+
+
+
+
+
+
+//etudiant service
+const API_BASE_URL = 'http://localhost:5001/api/cours/etudiant';
+
+export const getCoursEtudiant = async (userId) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/${userId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Erreur lors de la récupération des cours.");
+  }
+};
+
+export const downloadFichier = async (fichier) => {
+  try {
+    const url = `http://localhost:5001/uploads/${fichier}`;
+    const response = await axios.get(url, { responseType: 'blob' });
+    const blob = new Blob([response.data], { type: response.headers['content-type'] });
+    const disposition = response.headers['content-disposition'];
+    let filename = fichier;
+
+    if (disposition && disposition.includes('filename=')) {
+      filename = disposition
+        .split('filename=')[1]
+        .split(';')[0]
+        .replace(/"/g, '');
+    }
+
     const link = document.createElement('a');
-    link.href = url;
+    const objectUrl = URL.createObjectURL(blob);
+    link.href = objectUrl;
     link.setAttribute('download', filename);
     document.body.appendChild(link);
     link.click();
-    link.remove();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(objectUrl);
   } catch (error) {
-    console.error('Erreur lors du téléchargement du cours:', error);
+    throw new Error("Erreur lors du téléchargement du fichier");
   }
+};
+
+
+
+// cours des enseingnant 
+
+import axios from 'axios';
+
+const BASE_URL = 'http://localhost:5001/api/cours';
+
+export const getCoursByEnseignant = async (enseignantId) => {
+  const response = await axios.get(`${BASE_URL}/enseignant/${enseignantId}`);
+  return response.data;
+};
+
+export const deleteCours = async (id) => {
+  await axios.delete(`${BASE_URL}/${id}`);
+};
+
+export const downloadCoursFile = async (fichier) => {
+  const url = `http://localhost:5001/uploads/${fichier}`;
+  const response = await axios.get(url, { responseType: 'blob' });
+  return { data: response.data, contentType: response.headers['content-type'] };
 };

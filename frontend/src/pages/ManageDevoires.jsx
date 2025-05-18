@@ -136,13 +136,13 @@ const DevoirsList = () => {
             </form>
           )}
 
-          <h2 className="text-2xl font-semibold my-4">📚 Devoirs à faire</h2>
+          <h2 className="text-2xl font-semibold my-4 m-5"> Devoirs à faire</h2>
           {loading ? <p>Chargement...</p> : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 m-5 gap-4 border border-blue-200">
                 {paginatedAFaire.map(devoir => (
-                  <div key={devoir.id} className="bg-white shadow-lg rounded-lg p-4">
-                    <img src="/public/IMAGES/image.png" alt="task" className="w-16 h-16 mx-auto mb-3" />
+                  <div key={devoir.id} className="bg-white shadow-lg rounded-lg p-4 m-4 border border-blue-200">
+                    <img src="/public/IMAGES/image.png" alt="task" className="w-16 h-16 mx-auto mb-3 " />
                     <h3 className="text-lg font-bold">{devoir.titre}</h3>
                     <p className="text-sm mb-2">📅 Limite : {new Date(devoir.date_limite).toLocaleString()}</p>
                     {devoir.fichier && (

@@ -1,21 +1,28 @@
 import axios from 'axios';
-import { getCurrentUser } from './authService'; // ou l’endroit où tu l’as défini
 
-export const getEvents = (userId) => axios.get(`http://localhost:5005/api/events/${userId}`).then(res => res.data);
-export const createEvent = async (eventData) => {
-    const user = getCurrentUser(); // récupère l'utilisateur connecté
-  
-    if (!user || !user.id) {
-      throw new Error("Utilisateur non connecté ou ID manquant");
-    }
-  
-    const event = {
-      ...eventData,
-      user_id: user.id, // ID réel de l'utilisateur
-    };
-  
-    return axios.post('http://localhost:5005/api/events', event);
-  };
-  
-export const updateEvent = (id, event) => axios.put(`http://localhost:5005/api/events/${id}`, event);
-export const deleteEvent = (id) => axios.delete(`http://localhost:5005/api/events/${id}`);
+const API_URL = 'http://localhost:5005/api';
+
+const getToken = () => localStorage.getItem('token');
+const authHeader = () => ({
+  headers: { Authorization: `Bearer ${getToken()}` },
+});
+
+export const getEvents = async (userId) => {
+  const response = await axios.get(`${API_URL}/events/${userId}`, authHeader());
+  return response.data;
+};
+
+export const createEvent = async (event) => {
+  const response = await axios.post(`${API_URL}/events`, event, authHeader());
+  return response.data;
+};
+
+export const updateEvent = async (eventId, event) => {
+  const response = await axios.put(`${API_URL}/events/${eventId}`, event, authHeader());
+  return response.data;
+};
+
+export const deleteEvent = async (eventId) => {
+  const response = await axios.delete(`${API_URL}/events/${eventId}`, authHeader());
+  return response.data;
+};

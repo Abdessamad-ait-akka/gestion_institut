@@ -4,7 +4,11 @@ import { getDevoirsList, submitDevoir } from '../api/devoirService';
 import { Link } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
-import { FaBook, FaClipboardList, FaCalendarAlt } from 'react-icons/fa';
+import { FaBook, FaClipboardList, FaCalendarAlt,FaClock ,FaTrashAlt,FaCheckCircle,FaRegCalendarCheck,FaUserGraduate} from 'react-icons/fa';
+import { BookOpen } from 'lucide-react';
+
+
+<FaTrashAlt color="red" />
 
 function EtudiantDashboard() {
   const [devoirs, setDevoirs] = useState([]);
@@ -14,18 +18,17 @@ function EtudiantDashboard() {
   useEffect(() => {
     async function fetchDevoirs() {
       try {
-        const response = await getDevoirs();
+        const response = await getDevoirsList(); // nom correct de la fonction
         const data = Array.isArray(response.data) ? response.data : [];
         setDevoirs(data);
       } catch (err) {
         console.error("Erreur lors du chargement des devoirs :", err);
-        setDevoirs([]); // sécurise l'état même en cas d'erreur
+        setDevoirs([]);
       }
     }
-  
+
     fetchDevoirs();
   }, []);
-  
 
   const handleChange = (e, id) => {
     setFichiers({ ...fichiers, [id]: e.target.files[0] });
@@ -51,74 +54,86 @@ function EtudiantDashboard() {
   };
 
   return (
-    <> 
-    <div className="flex ">
-      <Sidebar />
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
+      <div className="sticky top-0 h-screen bg-gray-800">
+        <Sidebar />
+      </div>
 
-      <div className="flex-1 min-h-screen ">
-      <Navbar/>
-        <h1 className="text-3xl font-bold text-center  mt-8 mb-4 text-gray-800">Bienvenue, {user?.nom || 'Étudiant'}</h1>
+      <div className="flex-1 flex flex-col">
+        {/* Navbar */}
+        <div className="sticky top-0 z-50 bg-white shadow">
+          <Navbar />
+        </div>
 
-
-<div className="mb-8">
-  <h2 className="text-xl font-semibold text-gray-700 mb-4">Navigation rapide</h2>
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ml-6">
-    {/* Cours */}
-    <Link to="/cours" className="bg-white border border-blue-500 shadow-md hover:shadow-xl text-center transition rounded-xl w-72 h-40 p-4 flex flex-col justify-center items-start space-y-2">
-      <FaBook className="text-blue-600  items-center  justify-center items text-7xl m-auto" />
-      <span className="text-blue-700  font-medium">Liste des cours</span>
+        <main className="p-6 max-w-7xl mx-auto w-full overflow-auto">
+        <h1 className="text-2xl font-bold m-8 mb-4 text-blue-600 flex items-center gap-2">
+  <FaUserGraduate className="text-blue-600" />
+  Bienvenue, {user?.nom || 'Étudiant'} 
+  <span className="text-sm text-gray-500 ml-2 mt-2">(Étudiant)</span>
+</h1>
+          {/* Navigation rapide */}
+          <div className="mb-8">
+  <h2 className="text-xl font-semibold text-gray-700 m-8 mb-4">Navigation rapide</h2>
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ml-6 mr-6">
+    <Link
+      to="/coursEtudiant"
+      className="bg-white border border-blue-500 shadow-md hover:shadow-xl text-center transition rounded-xl w-full max-w-sm p-10 flex flex-col justify-center items-start space-y-2"
+    >
+      <FaBook className="text-blue-600 text-6xl self-center" />
+      <span className="text-blue-700 font-medium">Liste des cours</span>
     </Link>
 
-    {/* Devoirs */}
-    <Link to="/devoirs" className="bg-white shadow-md border border-blue-500 hover:shadow-xl transition rounded-xl w-72 h-40 p-4 flex flex-col justify-center items-start space-y-2">
-      <FaClipboardList className="text-green-600 text-7xl m-auto" />
+    <Link
+      to="/devoirs-et-soumission"
+      className="bg-white border border-green-600 shadow-md hover:shadow-xl transition rounded-xl w-full max-w-sm p-10 flex flex-col justify-center items-start space-y-2"
+    >
+      <FaClipboardList className="text-green-600 text-6xl self-center" />
       <span className="text-green-700 font-medium">Liste des devoirs</span>
     </Link>
 
-    {/* Événements */}
-    <Link to="/events" className="bg-white border border-blue-500 shadow-md hover:shadow-xl transition rounded-xl w-72 h-40 p-4 flex flex-col justify-center items-start space-y-2">
-      <FaCalendarAlt className="text-pink-600 text-7xl m-auto" />
+    <Link
+      to="/events"
+      className="bg-white border border-pink-600 shadow-md hover:shadow-xl transition rounded-xl w-full max-w-sm p-10 flex flex-col justify-center items-start space-y-2"
+    >
+      <FaCalendarAlt className="text-pink-600 text-6xl self-center" />
       <span className="text-pink-700 font-medium">Liste des événements</span>
+    </Link>
+
+    <Link
+      to="/devoirs-et-soumission"
+      className="bg-white border border-blue-600 shadow-md hover:shadow-xl transition rounded-xl w-full max-w-sm p-10 flex flex-col justify-center items-start space-y-2"
+    >
+      <FaClock className="text-blue-600 text-6xl self-center" />
+      <span className="text-blue-700 font-medium">Soumettre un devoir</span>
+    
+    </Link>
+
+    <Link
+      to="/mes-soumissions"
+      className="bg-white border border-green-600 shadow-md hover:shadow-xl transition rounded-xl w-full max-w-sm p-10 flex flex-col justify-center items-start space-y-2"
+    >
+      <FaCheckCircle className="text-green-600 text-6xl self-center" />
+      <span className="text-green-700 font-medium">Mes soumessions </span>
+    
+    </Link>
+
+    <Link
+      to="/emploie-de-temps"
+      className="bg-white border border-pink-600 shadow-md hover:shadow-xl transition rounded-xl w-full max-w-sm p-10 flex flex-col justify-center items-start space-y-2"
+    >
+      <FaRegCalendarCheck className="text-pink-600 text-6xl self-center" />
+      <span className="text-pink-700 font-medium">Emploie de Temps </span>
+    
     </Link>
   </div>
 </div>
 
 
-        <div>
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">Devoirs à soumettre</h2>
-          {devoirs.length > 0 ? (
-            <ul className="space-y-6">
-              {devoirs.map((devoir) => (
-                <li key={devoir.id} className="bg-white shadow p-4 rounded-lg">
-                  <div className="flex justify-between items-center mb-2">
-                    <div>
-                      <strong className="text-lg text-gray-800">{devoir.titre}</strong>
-                      <p className="text-sm text-gray-500">Date limite : {devoir.date_limite}</p>
-                    </div>
-                  </div>
-                  <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-                    <input
-                      type="file"
-                      onChange={(e) => handleChange(e, devoir.id)}
-                      className="border border-gray-300 p-2 rounded-md"
-                    />
-                    <button
-                      onClick={() => handleSubmit(devoir.id)}
-                      className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-                    >
-                      Soumettre
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-gray-500">Aucun devoir à soumettre.</p>
-          )}
-        </div>
+
+        </main>
       </div>
     </div>
-    </>
   );
 }
 
