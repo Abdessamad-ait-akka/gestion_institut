@@ -1,469 +1,294 @@
-import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import React, { useState, useEffect } from "react";
+import GenericTable from "../components/Table";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
 import {
   Box,
-  Typography,
   Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
   DialogTitle,
+  DialogContent,
+  DialogActions,
   TextField,
+  Button,
   Grid,
-  Paper,
-  IconButton,
-  Tooltip,
-  useTheme,
+  CircularProgress,
   Snackbar,
   Alert,
-  CircularProgress,
+  IconButton,
+  Tooltip,
   Fade,
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
-import {
-  AddCircleOutline,
-  SaveOutlined,
-  CancelOutlined,
-  EditOutlined,
-  DeleteOutline,
-  LockResetOutlined,
-} from '@mui/icons-material';
+} from "@mui/material";
 
-// =========================== Données initiales ===========================
-const initialRows = [
-  {
-    id: 1,
-    nom: 'Imad',
-    prenom: 'Ait Lahcen',
-    cin: 'TA123456',
-    filiere: 'GI',
-    email: 'imad@example.com',
-    groupe: 'G1',
-    password: '123456',
-    lastModified: new Date().toISOString(),
-  },
-];
-
-// =========================== Styles personnalisés ===========================
-const DashboardPaper = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(4),
-  borderRadius: theme.shape.borderRadius * 2,
-  boxShadow: theme.shadows[8],
-  minHeight: '80vh',
-  backgroundColor: theme.palette.background.default,
-}));
-
-const HeaderContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginBottom: theme.spacing(4),
-  padding: theme.spacing(3),
-  background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.primary.dark} 90%)`,
-  color: theme.palette.primary.contrastText,
-  borderRadius: theme.shape.borderRadius * 2,
-}));
-
-const ActionButton = styled(Button)(({ theme }) => ({
-  marginLeft: theme.spacing(2),
-  padding: theme.spacing(1.5, 3),
-  fontWeight: 600,
-  letterSpacing: 0.75,
-  textTransform: 'uppercase',
-  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-}));
-
-// =========================== Composant principal ===========================
-const initialFormState = {
-  nom: '',
-  prenom: '',
-  cin: '',
-  filiere: '',
-  email: '',
-  groupe: '',
-  password: '',
+const initialEtudiant = {
+  nom: "",
+  prenom: "",
+  email: "",
+  password: "",
+  filiere: "",
+  groupe: "",
 };
 
 const EtudiantDashboard = () => {
-  const theme = useTheme();
-  const [rows, setRows] = React.useState(initialRows);
-  const [dialogOpen, setDialogOpen] = React.useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
-  const [selectedId, setSelectedId] = React.useState(null);
-  const [formState, setFormState] = React.useState(initialFormState);
-  const [errors, setErrors] = React.useState({});
-  const [snackbar, setSnackbar] = React.useState({
-    open: false,
-    message: '',
-    severity: 'success',
-  });
-  const [loading, setLoading] = React.useState(false);
+  const [etudiants, setEtudiants] = useState([]);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [formData, setFormData] = useState(initialEtudiant);
+  const [isEdit, setIsEdit] = useState(false);
+  const [editIndex, setEditIndex] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [errors, setErrors] = useState({});
+  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const [deleteConfirm, setDeleteConfirm] = useState({ open: false, index: null });
 
-  // États initiaux
-  
-  // =========================== Validation du formulaire ===========================
-  const validateField = (name, value) => {
-    let error = '';
-    switch (name) {
-      case 'email':
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) error = 'Email invalide';
-        break;
-      case 'cin':
-        if (!/^[A-Z]{2}\d{6}$/.test(value)) error = 'CIN doit être au format XX123456';
-        break;
-      case 'password':
-        if (value.length < 6) error = 'Minimum 6 caractères';
-        break;
-      default:
-        if (!value.trim()) error = 'Ce champ est obligatoire';
-    }
-    return error;
-  };
+  // Simulated API call
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const mockData = [
+          { nom: "Ait Lahcen", prenom: "Imad", email: "imad@ent.ma", password: "••••••", filiere: "Génie Informatique", groupe: "G6" },
+          { nom: "Benali", prenom: "Samira", email: "samira@ent.ma", password: "••••••", filiere: "Génie Civil", groupe: "G3" },
+        ];
+        setEtudiants(mockData);
+      } catch (error) {
+        setSnackbar({ open: true, message: "Erreur de chargement des données", severity: "error" });
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   const validateForm = () => {
     const newErrors = {};
-    Object.keys(formState).forEach((field) => {
-      const error = validateField(field, formState[field]);
-      if (error) newErrors[field] = error;
-    });
+    if (!formData.nom.trim()) newErrors.nom = "Nom requis";
+    if (!formData.prenom.trim()) newErrors.prenom = "Prénom requis";
+    if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) newErrors.email = "Email invalide";
+    if (!formData.filiere.trim()) newErrors.filiere = "Filière requise";
+    if (!formData.groupe.trim()) newErrors.groupe = "Groupe requis";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // =========================== Gestionnaires d'événements ===========================
-  const handleDialogOpen = (student = null) => {
-    if (student) {
-      setFormState(student);
-      setSelectedId(student.id);
-    } else {
-      setFormState(initialFormState);
-      setSelectedId(null);
-    }
-    setDialogOpen(true);
-  };
-
-  const handleDialogClose = () => {
-    setDialogOpen(false);
-    setErrors({});
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormState((prev) => ({
-      ...prev,
-      [name]: value,
-      lastModified: new Date().toISOString(),
-    }));
-    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: '' }));
-  };
-
-  const handleSubmit = async () => {
+  const handleSave = () => {
     if (!validateForm()) return;
-    
-    setLoading(true);
-    // Simulation d'appel API
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    setRows((prev) => {
-      if (selectedId) {
-        return prev.map(row => row.id === selectedId ? 
-          { ...formState, id: selectedId } : row);
-      }
-      return [...prev, { ...formState, id: Date.now() }];
-    });
-    
-    setLoading(false);
-    handleDialogClose();
-    showSnackbar(
-      selectedId ? 'Étudiant mis à jour' : 'Nouvel étudiant ajouté',
-      'success'
-    );
+
+    const updatedEtudiants = [...etudiants];
+    const action = isEdit ? "modifié" : "ajouté";
+
+    if (isEdit) {
+      updatedEtudiants[editIndex] = formData;
+    } else {
+      updatedEtudiants.push({ ...formData, password: "••••••" });
+    }
+
+    setEtudiants(updatedEtudiants);
+    handleClose();
+    setSnackbar({ open: true, message: `Étudiant ${action} avec succès`, severity: "success" });
   };
 
-  const handleDelete = (id) => {
-    setSelectedId(id);
-    setDeleteDialogOpen(true);
+  const handleDeleteConfirm = (index) => {
+    const updated = etudiants.filter((_, i) => i !== index);
+    setEtudiants(updated);
+    setDeleteConfirm({ open: false, index: null });
+    setSnackbar({ open: true, message: "Étudiant supprimé avec succès", severity: "success" });
+  };
+  const handleClose = () => {
+    setFormData(initialEtudiant);
+    setOpenDialog(false);
   };
 
-  const confirmDelete = () => {
-    setRows((prev) => prev.filter(row => row.id !== selectedId));
-    setDeleteDialogOpen(false);
-    showSnackbar('Étudiant supprimé', 'warning');
+  const handleEdit = (row, index)=> {
+    setFormData(row);
+    setIsEdit(true);
+    setEditIndex(index);
+    setOpenDialog(true);
+  };
+  const handleDelete = (index) => {
+    const updated = [...etudiants];
+    updated.splice(index, 1);
+    setEtudiants(updated);
   };
 
-  const showSnackbar = (message, severity) => {
-    setSnackbar({ open: true, message, severity });
-  };
-
-  const handleSnackbarClose = () => {
-    setSnackbar({ ...snackbar, open: false });
-  };
-
-  // =========================== Configuration colonnes DataGrid ===========================
   const columns = [
-    { field: 'id', headerName: 'ID', width: 80, headerAlign: 'center', align: 'center' },
-    { field: 'nom', headerName: 'Nom', width: 150, editable: false },
-    { field: 'prenom', headerName: 'Prénom', width: 150 },
-    { field: 'cin', headerName: 'CIN', width: 130 },
-    { field: 'filiere', headerName: 'Filière', width: 130 },
-    { field: 'groupe', headerName: 'Groupe', width: 100 },
-    { field: 'email', headerName: 'Email', width: 220 },
+    { key: "nom", label: "Nom", minWidth: 120 },
+    { key: "prenom", label: "Prénom", minWidth: 120 },
+    { key: "email", label: "Email", minWidth: 200 },
+    { key: "filiere", label: "Filière", minWidth: 150 },
+    { key: "groupe", label: "Groupe", minWidth: 100 },
+    { key: "password", label: "Mot de passe", minWidth: 120 },
+  ];
+
+  const actions = [
     {
-      field: 'password',
-      headerName: 'Mot de passe',
-      width: 140,
-      renderCell: (params) => (
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <LockResetOutlined fontSize="small" />
-          ••••••
-        </Box>
-      ),
+      label: "Modifier",
+      icon: <EditIcon fontSize="small" />,
+      color: "primary",
+      onClick: (row, index) => handleEdit(row, index),
     },
     {
-      field: 'actions',
-      headerName: 'Actions',
-      width: 240,
-      renderCell: (params) => (
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <Tooltip title="Modifier">
-            <IconButton
-              onClick={() => handleDialogOpen(params.row)}
-              color="primary"
-              sx={{
-                background: theme.palette.primary.light + '22',
-                '&:hover': { background: theme.palette.primary.main + '44' }
-              }}
-            >
-              <EditOutlined fontSize="small" />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Supprimer">
-            <IconButton
-              onClick={() => handleDelete(params.row.id)}
-              color="error"
-              sx={{
-                background: theme.palette.error.light + '22',
-                '&:hover': { background: theme.palette.error.main + '44' }
-              }}
-            >
-              <DeleteOutline fontSize="small" />
-            </IconButton>
-          </Tooltip>
-        </Box>
-      ),
+      label: "Supprimer",
+      icon: <DeleteIcon fontSize="small" />,
+      color: "error",
+      onClick: (row, index) => setDeleteConfirm({ open: true, index }),
     },
   ];
 
   return (
-    <DashboardPaper elevation={3}>
-      {/* =========================== En-tête =========================== */}
-      <HeaderContainer>
-        <Typography variant="h4" fontWeight={700} sx={{ letterSpacing: 1 }}>
-          GESTION ÉTUDIANTS
-        </Typography>
-        <ActionButton
-          variant="contained"
-          onClick={() => handleDialogOpen()}
-          startIcon={<AddCircleOutline />}
-          sx={{
-            background: theme.palette.success.main,
-            '&:hover': {
-              background: theme.palette.success.dark,
-              transform: 'translateY(-1px)',
-            },
-          }}
-        >
-          Nouvel Étudiant
-        </ActionButton>
-      </HeaderContainer>
+    <Box sx={{ p: 3, position: "relative" }}>
+      {loading && (
+        <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
+          <CircularProgress />
+        </Box>
+      )}
 
-      {/* =========================== Tableau de données =========================== */}
-      <Box sx={{ height: 600, width: '100%', position: 'relative' }}>
-        <Fade in={!loading} timeout={500}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
-            disableSelectionOnClick
-            sx={{
-              border: 'none',
-              '& .MuiDataGrid-columnHeaders': {
-                backgroundColor: theme.palette.grey[100],
-                fontSize: '0.875rem',
-                fontWeight: 700,
-              },
-              '& .MuiDataGrid-row': {
-                '&:nth-of-type(even)': {
-                  backgroundColor: theme.palette.action.hover,
-                },
-                '&:hover': {
-                  backgroundColor: theme.palette.action.selected,
-                },
-              },
-              '& .MuiDataGrid-cell': {
-                borderBottom: `1px solid ${theme.palette.divider}`,
-              },
-            }}
-          />
-        </Fade>
-        {loading && (
-          <CircularProgress
-            size={48}
-            sx={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              color: theme.palette.primary.main,
-            }}
-          />
-        )}
-      </Box>
-
-      {/* =========================== Dialogue de formulaire =========================== */}
-      <Dialog
-        open={dialogOpen}
-        onClose={handleDialogClose}
-        maxWidth="sm"
-        fullWidth
-        PaperProps={{
-          sx: {
-            borderRadius: 4,
-            background: theme.palette.background.paper,
-          },
+      <GenericTable
+        columns={columns}
+        rows={etudiants}
+        loading={loading}
+        onAdd={() => {
+          setFormData(initialEtudiant);
+          setIsEdit(false);
+          setOpenDialog(true);
         }}
-      >
-        <DialogTitle
-          sx={{
-            background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.primary.dark} 90%)`,
-            color: theme.palette.primary.contrastText,
-            fontWeight: 600,
-            py: 3,
-          }}
-        >
-          {selectedId ? 'Modification Étudiant' : 'Création Nouvel Étudiant'}
+        actions={actions}
+        showActions
+        showAddButton
+        tableTitle="Gestion des Étudiants"
+        addButtonLabel="Nouvel Étudiant"
+        addButtonProps={{
+          startIcon: <AddIcon />,
+          variant: "contained",
+          sx: { mb: 2 }
+        }}
+      />
+
+      {/* Add/Edit Dialog */}
+      <Dialog open={openDialog} onClose={handleClose} fullWidth maxWidth="md" TransitionComponent={Fade}>
+        <DialogTitle sx={{ bgcolor: "primary.main", color: "white" }}>
+          {isEdit ? "Modifier l'Étudiant" : "Nouvel Étudiant"}
         </DialogTitle>
-        <DialogContent dividers sx={{ py: 3 }}>
-          <Grid container spacing={3}>
-            {Object.keys(initialFormState).map((field) => (
-              <Grid item xs={12} sm={6} key={field}>
+        <DialogContent sx={{ pt: 3 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Nom"
+                required
+                value={formData.nom}
+                onChange={(e) => setFormData({ ...formData, nom: e.target.value })}
+                error={!!errors.nom}
+                helperText={errors.nom}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Prénom"
+                required
+                value={formData.prenom}
+                onChange={(e) => setFormData({ ...formData, prenom: e.target.value })}
+                error={!!errors.prenom}
+                helperText={errors.prenom}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Email"
+                required
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                error={!!errors.email}
+                helperText={errors.email}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Filière"
+                required
+                value={formData.filiere}
+                onChange={(e) => setFormData({ ...formData, filiere: e.target.value })}
+                error={!!errors.filiere}
+                helperText={errors.filiere}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Groupe"
+                required
+                value={formData.groupe}
+                onChange={(e) => setFormData({ ...formData, groupe: e.target.value })}
+                error={!!errors.groupe}
+                helperText={errors.groupe}
+              />
+            </Grid>
+            {!isEdit && (
+              <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
-                  label={field.charAt(0).toUpperCase() + field.slice(1)}
-                  type={field === 'password' ? 'password' : 'text'}
-                  variant="outlined"
-                  name={field}
-                  value={formState[field]}
-                  onChange={handleChange}
-                  size="small"
-                  error={!!errors[field]}
-                  helperText={errors[field]}
-                  InputProps={{
-                    sx: { borderRadius: 2 },
-                  }}
+                  margin="normal"
+                  label="Mot de passe"
+                  type="password"
+                  required
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 />
               </Grid>
-            ))}
+            )}
           </Grid>
         </DialogContent>
-        <DialogActions sx={{ p: 2, borderTop: `1px solid ${theme.palette.divider}` }}>
-          <ActionButton
-            onClick={handleDialogClose}
-            startIcon={<CancelOutlined />}
-            sx={{
-              color: theme.palette.text.secondary,
-              '&:hover': { background: theme.palette.action.hover },
-            }}
-          >
-            Annuler
-          </ActionButton>
-          <ActionButton
-            onClick={handleSubmit}
-            startIcon={<SaveOutlined />}
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={handleClose} color="inherit">Annuler</Button>
+          <Button
+            onClick={handleSave}
             variant="contained"
-            disabled={loading}
-            sx={{
-              background: theme.palette.success.main,
-              '&:hover': { background: theme.palette.success.dark },
-              '&.Mui-disabled': { background: theme.palette.action.disabledBackground },
-            }}
+            color="primary"
+            startIcon={isEdit ? <EditIcon /> : <AddIcon />}
           >
-            {selectedId ? 'Mettre à jour' : 'Créer'}
-          </ActionButton>
+            {isEdit ? "Enregistrer" : "Créer"}
+          </Button>
         </DialogActions>
       </Dialog>
 
-      {/* =========================== Dialogue de confirmation =========================== */}
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
-        PaperProps={{
-          sx: {
-            borderRadius: 4,
-            border: `2px solid ${theme.palette.error.light}`,
-            overflow: 'hidden',
-          },
-        }}
-      >
-        <DialogTitle
-          sx={{
-            background: theme.palette.error.light,
-            color: theme.palette.error.contrastText,
-            fontWeight: 600,
-            py: 2,
-          }}
-        >
-          <DeleteOutline sx={{ verticalAlign: 'middle', mr: 1 }} />
-          Confirmation de suppression
-        </DialogTitle>
-        <DialogContent sx={{ py: 3 }}>
-          <DialogContentText fontWeight={500}>
-            Êtes-vous sûr de vouloir supprimer définitivement cet étudiant ?
-          </DialogContentText>
-          <DialogContentText variant="body2" sx={{ mt: 1, color: theme.palette.text.secondary }}>
-            Cette action supprimera toutes les données associées et ne peut pas être annulée.
-          </DialogContentText>
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteConfirm.open} onClose={() => setDeleteConfirm({ open: false, index: null })}>
+        <DialogTitle>Confirmer la suppression</DialogTitle>
+        <DialogContent>
+          Êtes-vous sûr de vouloir supprimer cet étudiant ?
         </DialogContent>
-        <DialogActions sx={{ p: 2, borderTop: `1px solid ${theme.palette.divider}` }}>
-          <ActionButton
-            onClick={() => setDeleteDialogOpen(false)}
-            sx={{ color: theme.palette.text.secondary }}
-          >
-            Annuler
-          </ActionButton>
-          <ActionButton
-            onClick={confirmDelete}
+        <DialogActions>
+          <Button onClick={() => setDeleteConfirm({ open: false, index: null })}>Annuler</Button>
+          <Button
+            onClick={() => handleDeleteConfirm(deleteConfirm.index)}
+            color="error"
             variant="contained"
-            startIcon={<DeleteOutline />}
-            sx={{
-              background: theme.palette.error.main,
-              '&:hover': { background: theme.palette.error.dark },
-            }}
           >
-            Confirmer
-          </ActionButton>
+            Supprimer
+          </Button>
         </DialogActions>
       </Dialog>
 
-      {/* =========================== Notification Snackbar =========================== */}
+      {/* Snackbar Notifications */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={4000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
       >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity={snackbar.severity}
-          variant="filled"
-          sx={{ width: '100%' }}
-        >
+        <Alert severity={snackbar.severity} sx={{ width: '100%' }}>
           {snackbar.message}
         </Alert>
       </Snackbar>
-    </DashboardPaper>
+    </Box>
   );
 };
 

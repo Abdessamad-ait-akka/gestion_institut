@@ -32,7 +32,7 @@ const getProfMenuItems = () => [
   {
     text: "Notes",
     icon: <AssessmentIcon />,
-    path: "/notes",
+    path: "/profNotes",
   },
   {
     text: "Devoirs",

@@ -56,12 +56,12 @@ const NavbarEtudiant = ({ onMenuToggle, isMenuOpen }) => {
   const [anchorMsg, setAnchorMsg] = useState(null);
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
-  const user = { username: "Administrateur" };
+  const user = { username: "Etudiant X" };
   const organizationName = "ENT ESTS";
 
   const notifications = [
-    { label: "Nouvel étudiant", secondary: "il y a 3 min" },
-    { label: "Nouveau prof", secondary: "il y a 3 min" },
+    { label: "Nouveau cours", secondary: "il y a 3 min" },
+    { label: "Nouveau Note ajouter", secondary: "il y a 3 min" },
   ];
 
   const messages = [
