@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from "react";
 import GenericTable from "../components/Table";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
+import {
+  CheckCircle as CheckCircleIcon,
+  Error as ErrorIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Add as AddIcon,
+  Search as SearchIcon,
+  Warning as WarningIcon,
+} from "@mui/icons-material";
 import {
   Box,
   Dialog,
@@ -18,6 +24,11 @@ import {
   IconButton,
   Tooltip,
   Fade,
+  Paper,
+  InputAdornment,
+  Typography,
+  Divider,
+  useTheme,
 } from "@mui/material";
 
 const initialEtudiant = {
@@ -30,50 +41,62 @@ const initialEtudiant = {
 };
 
 const EtudiantDashboard = () => {
-  const [etudiants, setEtudiants] = useState([]);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [formData, setFormData] = useState(initialEtudiant);
-  const [isEdit, setIsEdit] = useState(false);
-  const [editIndex, setEditIndex] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [errors, setErrors] = useState({});
-  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
-  const [deleteConfirm, setDeleteConfirm] = useState({ open: false, index: null });
+  const theme = useTheme();
+  const [state, setState] = useState({
+    etudiants: [],
+    openDialog: false,
+    formData: initialEtudiant,
+    isEdit: false,
+    editIndex: null,
+    loading: true,
+    errors: {},
+    snackbar: { open: false, message: "", severity: "success" },
+    deleteConfirm: { open: false, index: null },
+    searchTerm: "",
+  });
 
   // Simulated API call
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 1000));
         const mockData = [
           { nom: "Ait Lahcen", prenom: "Imad", email: "imad@ent.ma", password: "••••••", filiere: "Génie Informatique", groupe: "G6" },
           { nom: "Benali", prenom: "Samira", email: "samira@ent.ma", password: "••••••", filiere: "Génie Civil", groupe: "G3" },
         ];
-        setEtudiants(mockData);
+        setState(prev => ({ ...prev, etudiants: mockData, loading: false }));
       } catch (error) {
-        setSnackbar({ open: true, message: "Erreur de chargement des données", severity: "error" });
-      } finally {
-        setLoading(false);
+        handleSnackbarOpen("Erreur de chargement des données", "error");
+        setState(prev => ({ ...prev, loading: false }));
       }
     };
     fetchData();
   }, []);
 
+  const handleStateUpdate = (key, value) => {
+    setState(prev => ({ ...prev, [key]: value }));
+  };
+
+  const handleSnackbarOpen = (message, severity) => {
+    handleStateUpdate("snackbar", { open: true, message, severity });
+  };
+
   const validateForm = () => {
+    const { formData } = state;
     const newErrors = {};
     if (!formData.nom.trim()) newErrors.nom = "Nom requis";
     if (!formData.prenom.trim()) newErrors.prenom = "Prénom requis";
     if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) newErrors.email = "Email invalide";
     if (!formData.filiere.trim()) newErrors.filiere = "Filière requise";
     if (!formData.groupe.trim()) newErrors.groupe = "Groupe requis";
-    setErrors(newErrors);
+    handleStateUpdate("errors", newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSave = () => {
     if (!validateForm()) return;
 
+    const { etudiants, isEdit, editIndex, formData } = state;
     const updatedEtudiants = [...etudiants];
     const action = isEdit ? "modifié" : "ajouté";
 
@@ -83,41 +106,39 @@ const EtudiantDashboard = () => {
       updatedEtudiants.push({ ...formData, password: "••••••" });
     }
 
-    setEtudiants(updatedEtudiants);
-    handleClose();
-    setSnackbar({ open: true, message: `Étudiant ${action} avec succès`, severity: "success" });
+    handleStateUpdate("etudiants", updatedEtudiants);
+    handleDialogClose();
+    handleSnackbarOpen(`Étudiant ${action} avec succès`, "success");
   };
 
   const handleDeleteConfirm = (index) => {
-    const updated = etudiants.filter((_, i) => i !== index);
-    setEtudiants(updated);
-    setDeleteConfirm({ open: false, index: null });
-    setSnackbar({ open: true, message: "Étudiant supprimé avec succès", severity: "success" });
-  };
-  const handleClose = () => {
-    setFormData(initialEtudiant);
-    setOpenDialog(false);
+    const updated = state.etudiants.filter((_, i) => i !== index);
+    handleStateUpdate("etudiants", updated);
+    handleStateUpdate("deleteConfirm", { open: false, index: null });
+    handleSnackbarOpen("Étudiant supprimé avec succès", "success");
   };
 
-  const handleEdit = (row, index)=> {
-    setFormData(row);
-    setIsEdit(true);
-    setEditIndex(index);
-    setOpenDialog(true);
+  const handleDialogClose = () => {
+    handleStateUpdate("openDialog", false);
+    handleStateUpdate("formData", initialEtudiant);
+    handleStateUpdate("errors", {});
+    handleStateUpdate("isEdit", false);
   };
-  const handleDelete = (index) => {
-    const updated = [...etudiants];
-    updated.splice(index, 1);
-    setEtudiants(updated);
+
+  const handleEdit = (row, index) => {
+    handleStateUpdate("formData", row);
+    handleStateUpdate("isEdit", true);
+    handleStateUpdate("editIndex", index);
+    handleStateUpdate("openDialog", true);
   };
 
   const columns = [
-    { key: "nom", label: "Nom", minWidth: 120 },
-    { key: "prenom", label: "Prénom", minWidth: 120 },
+    { key: "nom", label: "Nom", minWidth: 150, headerStyle: { fontWeight: 600 } },
+    { key: "prenom", label: "Prénom", minWidth: 150 },
     { key: "email", label: "Email", minWidth: 200 },
-    { key: "filiere", label: "Filière", minWidth: 150 },
-    { key: "groupe", label: "Groupe", minWidth: 100 },
-    { key: "password", label: "Mot de passe", minWidth: 120 },
+    { key: "filiere", label: "Filière", minWidth: 180 },
+    { key: "groupe", label: "Groupe", minWidth: 120, align: "center" },
+    { key: "password", label: "Mot de passe", minWidth: 140 },
   ];
 
   const actions = [
@@ -131,164 +152,235 @@ const EtudiantDashboard = () => {
       label: "Supprimer",
       icon: <DeleteIcon fontSize="small" />,
       color: "error",
-      onClick: (row, index) => setDeleteConfirm({ open: true, index }),
+      onClick: (row, index) => handleStateUpdate("deleteConfirm", { open: true, index }),
     },
   ];
 
+  const filteredEtudiants = state.etudiants.filter(etudiant =>
+    Object.values(etudiant).some(val =>
+      val?.toString().toLowerCase().includes(state.searchTerm.toLowerCase())
+    )
+  );
+
   return (
-    <Box sx={{ p: 3, position: "relative" }}>
-      {loading && (
-        <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
-          <CircularProgress />
+    <Paper sx={{ p: 4, m: 3, borderRadius: 4, boxShadow: theme.shadows[3] }}>
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h5" component="h1" gutterBottom sx={{ fontWeight: 600 }}>
+          Gestion des Étudiants
+        </Typography>
+        <Divider sx={{ mb: 3 }} />
+        
+        <TextField
+          fullWidth
+          variant="outlined"
+          placeholder="Rechercher des étudiants..."
+          value={state.searchTerm}
+          onChange={(e) => handleStateUpdate("searchTerm", e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon color="action" />
+              </InputAdornment>
+            ),
+            sx: { borderRadius: 50, backgroundColor: theme.palette.background.paper }
+          }}
+        />
+      </Box>
+
+      {state.loading ? (
+        <Box sx={{ height: 300, display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <CircularProgress size={60} thickness={4} />
         </Box>
+      ) : (
+        <GenericTable
+          columns={columns}
+          rows={filteredEtudiants}
+          actions={actions}
+          showActions
+          showAddButton
+          onAdd={() => handleStateUpdate("openDialog", true)}
+          addButtonLabel="Ajouter Étudiant"
+          addButtonProps={{
+            startIcon: <AddIcon />,
+            variant: "contained",
+            sx: { 
+              borderRadius: 50,
+              textTransform: "none",
+              px: 4,
+              py: 1,
+              fontWeight: 600
+            }
+          }}
+          tableProps={{
+            sx: {
+              "& .MuiTableCell-head": {
+                backgroundColor: theme.palette.grey[100],
+                fontWeight: 600,
+              },
+              "& .MuiTableCell-body": {
+                borderBottom: `1px solid ${theme.palette.divider}`,
+              },
+            }
+          }}
+        />
       )}
 
-      <GenericTable
-        columns={columns}
-        rows={etudiants}
-        loading={loading}
-        onAdd={() => {
-          setFormData(initialEtudiant);
-          setIsEdit(false);
-          setOpenDialog(true);
-        }}
-        actions={actions}
-        showActions
-        showAddButton
-        tableTitle="Gestion des Étudiants"
-        addButtonLabel="Nouvel Étudiant"
-        addButtonProps={{
-          startIcon: <AddIcon />,
-          variant: "contained",
-          sx: { mb: 2 }
-        }}
-      />
-
       {/* Add/Edit Dialog */}
-      <Dialog open={openDialog} onClose={handleClose} fullWidth maxWidth="md" TransitionComponent={Fade}>
-        <DialogTitle sx={{ bgcolor: "primary.main", color: "white" }}>
-          {isEdit ? "Modifier l'Étudiant" : "Nouvel Étudiant"}
-        </DialogTitle>
-        <DialogContent sx={{ pt: 3 }}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                margin="normal"
-                label="Nom"
-                required
-                value={formData.nom}
-                onChange={(e) => setFormData({ ...formData, nom: e.target.value })}
-                error={!!errors.nom}
-                helperText={errors.nom}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                margin="normal"
-                label="Prénom"
-                required
-                value={formData.prenom}
-                onChange={(e) => setFormData({ ...formData, prenom: e.target.value })}
-                error={!!errors.prenom}
-                helperText={errors.prenom}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                margin="normal"
-                label="Email"
-                required
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                error={!!errors.email}
-                helperText={errors.email}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                margin="normal"
-                label="Filière"
-                required
-                value={formData.filiere}
-                onChange={(e) => setFormData({ ...formData, filiere: e.target.value })}
-                error={!!errors.filiere}
-                helperText={errors.filiere}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                margin="normal"
-                label="Groupe"
-                required
-                value={formData.groupe}
-                onChange={(e) => setFormData({ ...formData, groupe: e.target.value })}
-                error={!!errors.groupe}
-                helperText={errors.groupe}
-              />
-            </Grid>
-            {!isEdit && (
-              <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  margin="normal"
-                  label="Mot de passe"
-                  type="password"
-                  required
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                />
-              </Grid>
+      <Dialog
+        open={state.openDialog}
+        onClose={handleDialogClose}
+        fullWidth
+        maxWidth="md"
+        TransitionComponent={Fade}
+      >
+        <DialogTitle sx={{ 
+          bgcolor: theme.palette.primary.main,
+          color: theme.palette.common.white,
+          py: 2,
+          display: "flex",
+          alignItems: "center"
+        }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+            {state.isEdit ? (
+              <>
+                <EditIcon fontSize="small" />
+                <Typography variant="h6">Modifier l'Étudiant</Typography>
+              </>
+            ) : (
+              <>
+                <AddIcon fontSize="small" />
+                <Typography variant="h6">Nouvel Étudiant</Typography>
+              </>
             )}
+          </Box>
+        </DialogTitle>
+        
+        <DialogContent sx={{ pt: 3 }}>
+          <Grid container spacing={3}>
+            {Object.keys(initialEtudiant).map((field) => (
+              (state.isEdit && field === "password") ? null : (
+                <Grid item xs={12} md={6} key={field}>
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    margin="normal"
+                    label={columns.find(c => c.key === field)?.label || field}
+                    required
+                    type={field === "password" ? "password" : "text"}
+                    value={state.formData[field]}
+                    onChange={(e) => handleStateUpdate("formData", {
+                      ...state.formData,
+                      [field]: e.target.value
+                    })}
+                    error={!!state.errors[field]}
+                    helperText={state.errors[field]}
+                    InputLabelProps={{ shrink: true }}
+                    sx={{ 
+                      "& .MuiOutlinedInput-root": {
+                        borderRadius: 2,
+                      }
+                    }}
+                  />
+                </Grid>
+              )
+            ))}
           </Grid>
         </DialogContent>
-        <DialogActions sx={{ p: 2 }}>
-          <Button onClick={handleClose} color="inherit">Annuler</Button>
+
+        <DialogActions sx={{ p: 2, borderTop: `1px solid ${theme.palette.divider}` }}>
+          <Button 
+            onClick={handleDialogClose}
+            sx={{ 
+              color: theme.palette.text.secondary,
+              "&:hover": { backgroundColor: theme.palette.action.hover }
+            }}
+          >
+            Annuler
+          </Button>
           <Button
             onClick={handleSave}
             variant="contained"
             color="primary"
-            startIcon={isEdit ? <EditIcon /> : <AddIcon />}
+            startIcon={state.isEdit ? <EditIcon /> : <AddIcon />}
+            sx={{ 
+              borderRadius: 50,
+              px: 4,
+              textTransform: "none",
+              boxShadow: 'none',
+              "&:hover": { boxShadow: theme.shadows[2] }
+            }}
           >
-            {isEdit ? "Enregistrer" : "Créer"}
+            {state.isEdit ? "Mettre à jour" : "Créer étudiant"}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
-      <Dialog open={deleteConfirm.open} onClose={() => setDeleteConfirm({ open: false, index: null })}>
-        <DialogTitle>Confirmer la suppression</DialogTitle>
+      <Dialog
+        open={state.deleteConfirm.open}
+        onClose={() => handleStateUpdate("deleteConfirm", { open: false, index: null })}
+        TransitionComponent={Fade}
+      >
+        <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <WarningIcon color="error" />
+          <Typography variant="h6">Confirmer la suppression</Typography>
+        </DialogTitle>
         <DialogContent>
-          Êtes-vous sûr de vouloir supprimer cet étudiant ?
+          <Typography variant="body1">
+            Êtes-vous sûr de vouloir supprimer définitivement cet étudiant ?
+          </Typography>
+          <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
+            Cette action est irréversible et supprimera toutes les données associées.
+          </Typography>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteConfirm({ open: false, index: null })}>Annuler</Button>
-          <Button
-            onClick={() => handleDeleteConfirm(deleteConfirm.index)}
-            color="error"
-            variant="contained"
+        <DialogActions sx={{ p: 2, borderTop: `1px solid ${theme.palette.divider}` }}>
+          <Button 
+            onClick={() => handleStateUpdate("deleteConfirm", { open: false, index: null })}
+            sx={{ color: theme.palette.text.secondary }}
           >
-            Supprimer
+            Annuler
+          </Button>
+          <Button
+            onClick={() => handleDeleteConfirm(state.deleteConfirm.index)}
+            variant="contained"
+            color="error"
+            startIcon={<DeleteIcon />}
+            sx={{ 
+              borderRadius: 50,
+              px: 4,
+              textTransform: "none",
+              boxShadow: 'none',
+              "&:hover": { boxShadow: theme.shadows[2] }
+            }}
+          >
+            Confirmer la suppression
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Snackbar Notifications */}
       <Snackbar
-        open={snackbar.open}
+        open={state.snackbar.open}
         autoHideDuration={4000}
-        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        onClose={() => handleStateUpdate("snackbar", { ...state.snackbar, open: false })}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
-        <Alert severity={snackbar.severity} sx={{ width: '100%' }}>
-          {snackbar.message}
+        <Alert 
+          severity={state.snackbar.severity} 
+          sx={{ 
+            width: '100%',
+            boxShadow: theme.shadows[3],
+            alignItems: 'center'
+          }}
+          iconMapping={{
+            success: <CheckCircleIcon fontSize="inherit" />,
+            error: <ErrorIcon fontSize="inherit" />,
+          }}
+        >
+          <Typography variant="body1">{state.snackbar.message}</Typography>
         </Alert>
       </Snackbar>
-    </Box>
+    </Paper>
   );
 };
 
