@@ -14,7 +14,11 @@ const EtudiantLayout = ({ children }) => {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <NavbarEtudiant onMenuToggle={handleMenuToggle} isMenuOpen={isMenuOpen} />
+      <NavbarEtudiant
+  onMenuToggle={handleMenuToggle}
+  isMenuOpen={isMenuOpen}
+  drawerWidth={drawerWidth}
+/>
       <SidebarEtudiant isOpen={isMenuOpen} onToggle={handleMenuToggle} />
       <Box
         component="main"

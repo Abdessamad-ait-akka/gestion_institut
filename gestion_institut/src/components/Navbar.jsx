@@ -47,13 +47,13 @@ const AnimatedMenuIcon = styled(IconButton)(({ theme }) => ({
   },
 }));
 
-const Navbar = ({ onMenuToggle, isMenuOpen }) => {
+const Navbar = ({ onMenuToggle, isMenuOpen, drawerWidth }) =>  {
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorNotif, setAnchorNotif] = useState(null);
   const [anchorMsg, setAnchorMsg] = useState(null);
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
-  const user = { username: "Etudiant X" };
+  const user = { username: "Admin X" };
   const organizationName = "ENT ESTS";
   const notifications = [
     { label: "Nouvelle note ajoutée", secondary: "il y a 5 min" },
@@ -74,7 +74,13 @@ const Navbar = ({ onMenuToggle, isMenuOpen }) => {
 
   return (
     <>
-      <StyledAppBar position="fixed">
+      <StyledAppBar
+  position="fixed"
+  sx={{
+    ml: { md: isMenuOpen ? `${drawerWidth}px` : 0 },
+    width: { md: isMenuOpen ? `calc(100% - ${drawerWidth}px)` : '100%' },
+  }}
+>
         <Toolbar sx={{ justifyContent: "space-between" }}>
           {/* Section gauche : bouton menu + titre */}
           <Stack direction="row" alignItems="center" spacing={2}>

@@ -3,7 +3,7 @@ import { Box, Toolbar, useMediaQuery, useTheme } from "@mui/material";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 
-const drawerWidth = 260;
+const drawerWidth = 220;
 
 const AdminLayout = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,7 +17,11 @@ const AdminLayout = ({ children }) => {
   return (
     <Box sx={{ display: "flex" }}>
       {/* Top Navbar */}
-      <Navbar onMenuToggle={handleMenuToggle} isMenuOpen={isMenuOpen} />
+      <Navbar
+  onMenuToggle={handleMenuToggle}
+  isMenuOpen={isMenuOpen}
+  drawerWidth={drawerWidth}
+/>
 
       {/* Sidebar (gestionne mobile vs desktop dans le composant) */}
       <Sidebar isOpen={isMenuOpen} onToggle={handleMenuToggle} />

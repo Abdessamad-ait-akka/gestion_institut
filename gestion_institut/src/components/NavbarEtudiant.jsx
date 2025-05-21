@@ -50,7 +50,7 @@ const AnimatedMenuIcon = styled(IconButton)(({ theme }) => ({
   },
 }));
 
-const NavbarEtudiant = ({ onMenuToggle, isMenuOpen }) => {
+const  NavbarEtudiant = ({ onMenuToggle, isMenuOpen, drawerWidth }) =>{
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorNotif, setAnchorNotif] = useState(null);
   const [anchorMsg, setAnchorMsg] = useState(null);
@@ -79,7 +79,13 @@ const NavbarEtudiant = ({ onMenuToggle, isMenuOpen }) => {
 
   return (
     <>
-      <StyledAppBar position="fixed">
+     <StyledAppBar
+  position="fixed"
+  sx={{
+    ml: { md: isMenuOpen ? `${drawerWidth}px` : 0 },
+    width: { md: isMenuOpen ? `calc(100% - ${drawerWidth}px)` : '100%' },
+  }}
+>
         <Toolbar sx={{ justifyContent: "space-between" }}>
           {/* Gauche : hamburger + titre */}
           <Stack direction="row" alignItems="center" spacing={2}>
