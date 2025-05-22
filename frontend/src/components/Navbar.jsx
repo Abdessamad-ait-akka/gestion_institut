@@ -31,7 +31,7 @@ function Navbar() {
 
         {/* Utilisateur */}
         <div className="flex items-center gap-2">
-          <FaUserCircle className="text-2xl text-gray-700" />
+          <FaUserCircle className="text-3xl rounded-full border border-blue-500 text-gray-700" />
           <span className="text-gray-700 font-medium">
             {user?.nom || 'Utilisateur'}
           </span>

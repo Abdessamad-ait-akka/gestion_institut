@@ -74,7 +74,6 @@ export const downloadFichier = async (fichier) => {
 
 // cours des enseingnant 
 
-import axios from 'axios';
 
 const BASE_URL = 'http://localhost:5001/api/cours';
 

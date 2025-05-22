@@ -97,6 +97,8 @@ def update_utilisateur(id):
     utilisateur.prenom = data.get('prenom', utilisateur.prenom)
     utilisateur.email = data.get('email', utilisateur.email)
     utilisateur.mot_de_passe = data.get('mot_de_passe', utilisateur.mot_de_passe)
+    if 'mot_de_passe' in data and data['mot_de_passe']:
+      utilisateur.mot_de_passe = generate_password_hash(data['mot_de_passe'])
 
     try:
         db.session.commit()

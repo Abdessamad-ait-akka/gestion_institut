@@ -17,6 +17,7 @@ import EmploiParGroupe from './components/EmploieGroupe.jsx'
 import DevoirsEtudiant from './components/CreateDevoirForm.jsx';
 import CreateDevoirForm from './components/CreateDevoirForm.jsx';
 import DevoirsList from './components/ListDevoires.jsx';
+import ChatBot from './pages/ChatBot.jsx';
 createRoot(document.getElementById('root')).render(
     <App />
 )

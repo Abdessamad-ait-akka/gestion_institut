@@ -4,7 +4,7 @@ import { getDevoirsList, submitDevoir } from '../api/devoirService';
 import { Link } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
-import { FaBook, FaClipboardList, FaCalendarAlt,FaClock ,FaTrashAlt,FaCheckCircle,FaRegCalendarCheck,FaUserGraduate} from 'react-icons/fa';
+import { FaBook, FaClipboardList, FaCalendarAlt,FaClock ,FaTrashAlt,FaCheckCircle,FaRegCalendarCheck,FaUserGraduate,FaRobot} from 'react-icons/fa';
 import { BookOpen } from 'lucide-react';
 
 
@@ -126,6 +126,15 @@ function EtudiantDashboard() {
       <span className="text-pink-700 font-medium">Emploie de Temps </span>
     
     </Link>
+
+    <Link
+  to="/chat-ai"
+  className="bg-white shadow-md hover:shadow-xl border border-indigo-600 transition rounded-xl w-full max-w-sm p-4 flex flex-col justify-center items-start space-y-2"
+>
+<FaRobot className="text-6xl m-auto text-indigo-600" />
+  <h3 className="text-lg font-semibold text-indigo-600">Assistant IA</h3>
+  <p className="text-sm text-gray-500">Posez vos questions et obtenez des réponses instantanées.</p>
+</Link>
   </div>
 </div>
 

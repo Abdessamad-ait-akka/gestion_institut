@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import { Link } from 'react-router-dom';
-import { FaBook, FaClipboardList, FaCalendarAlt, FaUpload ,FaClock,FaChalkboardTeacher} from 'react-icons/fa';
+import { FaBook, FaClipboardList, FaCalendarAlt, FaUpload ,FaClock,FaChalkboardTeacher,FaRobot} from 'react-icons/fa';
 
 import { getCurrentUser } from '../api/authService';
 import {
@@ -133,6 +133,16 @@ const EnseignantDashboard = () => {
       <h3 className="text-lg font-semibold text-pink-600">Envoyer un devoire</h3>
       <p className="text-sm text-gray-500">Ajouter un nouveau fichier de devoire</p>
     </Link>
+
+    <Link
+  to="/chat-ai"
+  className="bg-white shadow-md hover:shadow-xl border border-blue-600 transition rounded-xl w-full max-w-sm p-4 flex flex-col justify-center items-start space-y-2"
+>
+<FaRobot className="text-6xl m-auto text-blue-600" />
+  <h3 className="text-lg font-semibold text-blue-600">Assistant IA</h3>
+  <p className="text-sm text-gray-500">Posez vos questions et obtenez des réponses instantanées.</p>
+</Link>
+
     </div>
 </main>
 

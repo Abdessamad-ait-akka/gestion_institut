@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   FaBars, FaTimes, FaHome, FaUserGraduate,
   FaChalkboardTeacher, FaCalendarAlt, FaUsers, FaBook, FaSignOutAlt,
-  FaClipboardList, FaList, FaUser, FaBookOpen, FaTasks,FaClock,FaUpload,FaRegCalendarCheck
+  FaClipboardList, FaList, FaUser, FaBookOpen, FaTasks,FaClock,FaUpload,FaRegCalendarCheck,FaRobot,
 } from 'react-icons/fa';
 import { getCurrentUser } from '../api/authService';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -46,6 +46,13 @@ const Sidebar = () => {
     { label: 'Accueil', icon: <FaHome />, to: '/etudiant', roles: ['etudiant'] },
     { label: 'Accueil', icon: <FaHome />, to: '/admin', roles: ['administrateur'] },
 
+
+    { label: 'Emploie', icon: <FaRegCalendarCheck />, to: '/emploie-de-temps', roles: ['etudiant'] },
+
+,
+
+    
+    
     { label: 'Envoiyer un Devoir', icon: <FaClock />, to: '/CreateDevoirPage', roles: ['enseignant'] },
     { label: 'Envoiyer un cour', icon: <FaUpload />, to: '/upload', roles: ['enseignant'] },
 
@@ -61,11 +68,14 @@ const Sidebar = () => {
     { label: 'Matières', icon: <FaBookOpen />, to: '/matiere', roles: ['administrateur'] },
     { label: 'Gérer les Cours', icon: <FaBook />, to: '/coursAdmin', roles: ['administrateur'] },
     { label: 'Gérer es emplois ', icon: <FaRegCalendarCheck />, to: '/gestion-emploie-de-temps', roles: ['administrateur'] },
-    { label: 'Profil', icon: <FaUser />, to: '/profile', roles: ['administrateur'] },
+    
+    {label: 'Assistant IA',icon: <FaRobot  />,to: '/chat-ai',roles: ['administrateur', 'enseignant', 'etudiant']}
 
+,
     { label: 'Liste des cours', icon: <FaBook />, to: '/coursEtudiant', roles: ['etudiant'] },
     { label: 'Liste des cours', icon: <FaBook />, to: '/CoursEnseignant', roles: ['enseignant'] },
     { label: 'Mes Étudiants', icon: <FaChalkboardTeacher />, to: '/cours', roles: ['enseignant'] },
+    
   ];
 
   return (

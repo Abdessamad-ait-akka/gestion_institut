@@ -19,7 +19,7 @@ import {
   FaFolderOpen,
   FaBookOpen,
   FaUserShield,
-  FaSignOutAlt,FaRegCalendarCheck
+  FaSignOutAlt,FaRegCalendarCheck,FaRobot
 } from 'react-icons/fa';
 
 function AdminDashboard() {
@@ -120,7 +120,14 @@ function AdminDashboard() {
       description: `Nom : ${user.nom}, Email : ${user.email}`,
       to: '/profile',
       icon: <FaUser className="text-3xl text-orange-500" />
+    },
+    {
+      title: 'Assistant IA',
+      description: 'Posez vos questions et obtenez des réponses instantanées.',
+      to: '/chat-ai',
+      icon: <FaRobot className="text-3xl text-indigo-600" />
     }
+    
   ];
 
   return (

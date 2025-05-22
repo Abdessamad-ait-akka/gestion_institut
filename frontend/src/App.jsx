@@ -28,6 +28,7 @@ import DevoirsEtSoumission from './components/SoumettreDevoirForm';
 import MesSoumissions from './components/MesSoumissions';
 import EmploiCRUD from './components/EmploiForm';
 import EmploiParGroupe from './components/EmploieGroupe';
+import ChatAI from './pages/ChatBot';
 
 
 function App() {
@@ -98,6 +99,10 @@ function App() {
         path="/soumissions/:devoirId" 
         element={<PrivateRoute requiredRole="enseignant"><SoumissionsPage /></PrivateRoute>} 
       />
+        <Route 
+          path="/Chat-ai" 
+          element={<PrivateRoute requiredRole="enseignant"><ChatAI /></PrivateRoute>} 
+        /> 
        <Route 
         path="/mes-soumissions" 
         element={<PrivateRoute requiredRole="administrateur"><MesSoumissions /></PrivateRoute>} 
