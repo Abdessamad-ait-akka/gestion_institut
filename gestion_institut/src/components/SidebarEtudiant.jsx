@@ -9,49 +9,53 @@ import {
   Toolbar,
 } from "@mui/material";
 import {
-  Dashboard,
+  Dashboard as DashboardIcon,
+  CalendarToday as CalendarIcon,
+  LibraryBooks as CoursesIcon,
+  Chat as MessagingIcon,
+  Grade as GradesIcon,
+  Assignment as InterventionIcon,
+  HelpOutline as AssistanceIcon,
   ExpandLess,
   ExpandMore,
-  Class as ClassIcon,
-  Assessment as AssessmentIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useTheme, useMediaQuery } from "@mui/material";
 
 const getEtudiantMenuItems = () => [
   {
-    text: "Acceuil",
-    icon: <Dashboard />,
+    text: "Tableau de bord",
+    icon: <DashboardIcon fontSize="small" />,
     path: "/etudiant",
   },
   {
     text: "Calendrier",
-    icon: <ClassIcon />,
+    icon: <CalendarIcon fontSize="small" />,
     path: "/calendrier",
   },
   {
     text: "Cours",
-    icon: <AssessmentIcon />,
+    icon: <CoursesIcon fontSize="small" />,
     path: "/cours",
   },
   {
-    text: "messagerie",
-    icon: <AssessmentIcon />,
+    text: "Messagerie",
+    icon: <MessagingIcon fontSize="small" />,
     path: "/messagerie",
   },
   {
     text: "Notes",
-    icon: <AssessmentIcon />,
+    icon: <GradesIcon fontSize="small" />,
     path: "/notes",
   },
   {
-    text: "intervention",
-    icon: <AssessmentIcon />,
+    text: "Intervention",
+    icon: <InterventionIcon fontSize="small" />,
     path: "/intervention",
   },
   {
-    text: "assistance",
-    icon: <AssessmentIcon />,
+    text: "Assistance",
+    icon: <AssistanceIcon fontSize="small" />,
     path: "/assistance",
   },
 
