@@ -96,25 +96,24 @@ const ProfDashboard = () => {
 
   const handleSave = () => {
     if (!validateForm()) return;
-
+  
     const { Prof, isEdit, editIndex, formData } = state;
     const updatedProf = [...Prof];
     const action = isEdit ? "modifié" : "ajouté";
-
+  
     if (isEdit) {
       updatedProf[editIndex] = formData;
     } else {
       updatedProf.push({ ...formData, password: "••••••" });
     }
-
-    handleStateUpdate("Proffesseur", updatedProf);
+  
+    handleStateUpdate("Prof", updatedProf); // ✅ ici était l'erreur
     handleDialogClose();
     handleSnackbarOpen(`Prof ${action} avec succès`, "success");
   };
-
   const handleDeleteConfirm = (index) => {
     const updated = state.Prof.filter((_, i) => i !== index);
-    handleStateUpdate("Profs", updated);
+    handleStateUpdate("Prof", updated);
     handleStateUpdate("deleteConfirm", { open: false, index: null });
     handleSnackbarOpen("Prof supprimé avec succès", "success");
   };
@@ -127,7 +126,15 @@ const ProfDashboard = () => {
   };
 
   const handleEdit = (row, index) => {
-    handleStateUpdate("formData", row);
+    handleStateUpdate("formData", {
+      nom: row.nom || "",
+      prenom: row.prenom || "",
+      email: row.email || "",
+      password: "", // On ne réaffiche jamais l’ancien mot de passe
+      filiere: row.filiere || "",
+      groupe: row.groupe || "",
+      matiere: row.matiere || "",
+    });
     handleStateUpdate("isEdit", true);
     handleStateUpdate("editIndex", index);
     handleStateUpdate("openDialog", true);
@@ -148,13 +155,19 @@ const ProfDashboard = () => {
       label: "Modifier",
       icon: <EditIcon fontSize="small" />,
       color: "primary",
-      onClick: (row, index) => handleEdit(row, index),
+      onClick: (row) => {
+        const index = state.Prof.findIndex(p => p.email === row.email);
+        handleEdit(row, index);
+      },
     },
     {
       label: "Supprimer",
       icon: <DeleteIcon fontSize="small" />,
       color: "error",
-      onClick: (row, index) => handleStateUpdate("deleteConfirm", { open: true, index }),
+      onClick: (row) => {
+        const index = state.Prof.findIndex(p => p.email === row.email);
+        handleStateUpdate("deleteConfirm", { open: true, index });
+      },
     },
   ];
 

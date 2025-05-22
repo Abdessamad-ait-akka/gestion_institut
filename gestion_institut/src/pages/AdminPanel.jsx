@@ -46,7 +46,7 @@ const AdminPanel = () => {
         fontWeight: 600,
         color: theme.palette.text.primary
       }}>
-        Admin Dashboard 
+        {/*titre*/}
       </Typography>
 
       <Grid container spacing={3} justifyContent={isMobile ? 'center' : 'flex-start'}>
