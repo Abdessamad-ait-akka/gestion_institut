@@ -81,7 +81,7 @@ const EnseignantDashboard = () => {
   <div className="mb-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-center">
     <Link
       to="/CoursEnseignant"
-      className="bg-white shadow-md hover:shadow-xl transition border border-blue-500 rounded-xl w-full max-w-sm p-4 flex flex-col justify-center items-start space-y-2"
+      className="bg-white shadow-md hover:shadow transition border border-blue-500 rounded-xl w-full max-w-sm p-4 flex flex-col justify-center items-start space-y-2"
     >
       <FaBook className="text-blue-600 text-6xl m-auto" />
       <h3 className="text-lg font-semibold text-blue-600">Liste des cours</h3>
@@ -90,7 +90,7 @@ const EnseignantDashboard = () => {
 
     <Link
       to="/devoirs"
-      className="bg-white shadow-md hover:shadow-xl border border-green-600 transition rounded-xl w-full max-w-sm p-4 flex flex-col justify-center items-start space-y-2"
+      className="bg-white shadow-md hover:shadow border border-green-600 transition rounded-xl w-full max-w-sm p-4 flex flex-col justify-center items-start space-y-2"
     >
       <FaClipboardList className="text-green-600 text-6xl m-auto" />
       <h3 className="text-lg font-semibold text-green-600">Liste des devoirs</h3>
@@ -99,7 +99,7 @@ const EnseignantDashboard = () => {
 
     <Link
       to="/events"
-      className="bg-white shadow-md border border-pink-600 hover:shadow-xl transition rounded-xl w-full max-w-sm p-4 flex flex-col justify-center items-start space-y-2"
+      className="bg-white shadow-md border border-pink-600 hover:shadow transition rounded-xl w-full max-w-sm p-4 flex flex-col justify-center items-start space-y-2"
     >
       <FaCalendarAlt className="text-pink-600 text-6xl m-auto" />
       <h3 className="text-lg font-semibold text-pink-600">Liste des événements</h3>
@@ -108,7 +108,7 @@ const EnseignantDashboard = () => {
 
     <Link
       to="/upload"
-      className="bg-white shadow-md hover:shadow-xl border border-blue-600 transition rounded-xl w-full max-w-sm p-4 flex flex-col justify-center items-start space-y-2"
+      className="bg-white shadow-md hover:shadow border border-blue-600 transition rounded-xl w-full max-w-sm p-4 flex flex-col justify-center items-start space-y-2"
     >
       <FaUpload className="text-blue-600 text-6xl m-auto" />
       <h3 className="text-lg font-semibold text-blue-600">Envoyer un cours</h3>
@@ -118,7 +118,7 @@ const EnseignantDashboard = () => {
 
     <Link
       to="/CreateDevoirPage"
-      className="bg-white shadow-md hover:shadow-xl border border-green-600 transition rounded-xl w-full max-w-sm p-4 flex flex-col justify-center items-start space-y-2"
+      className="bg-white shadow-md hover:shadow border border-green-600 transition rounded-xl w-full max-w-sm p-4 flex flex-col justify-center items-start space-y-2"
     >
       <FaClock className="text-green-600 text-6xl m-auto" />
       <h3 className="text-lg font-semibold text-green-600">Envoyer un devoire</h3>
@@ -127,7 +127,7 @@ const EnseignantDashboard = () => {
 
     <Link
       to="/CreateDevoirPage"
-      className="bg-white shadow-md hover:shadow-xl border border-pink-600 transition rounded-xl w-full max-w-sm p-4 flex flex-col justify-center items-start space-y-2"
+      className="bg-white shadow-md hover:shadow border border-pink-600 transition rounded-xl w-full max-w-sm p-4 flex flex-col justify-center items-start space-y-2"
     >
       <FaClock className="text-pink-600 text-6xl m-auto" />
       <h3 className="text-lg font-semibold text-pink-600">Envoyer un devoire</h3>
@@ -136,7 +136,7 @@ const EnseignantDashboard = () => {
 
     <Link
   to="/chat-ai"
-  className="bg-white shadow-md hover:shadow-xl border border-blue-600 transition rounded-xl w-full max-w-sm p-4 flex flex-col justify-center items-start space-y-2"
+  className="bg-white shadow-md hover:shadow border border-blue-600 transition rounded-xl w-full max-w-sm p-4 flex flex-col justify-center items-start space-y-2"
 >
 <FaRobot className="text-6xl m-auto text-blue-600" />
   <h3 className="text-lg font-semibold text-blue-600">Assistant IA</h3>

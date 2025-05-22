@@ -78,7 +78,7 @@ function EtudiantDashboard() {
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ml-6 mr-6">
     <Link
       to="/coursEtudiant"
-      className="bg-white border border-blue-500 shadow-md hover:shadow-xl text-center transition rounded-xl w-full max-w-sm p-10 flex flex-col justify-center items-start space-y-2"
+      className="bg-white border border-blue-500 shadow-md hover:shadow text-center transition rounded-xl w-full max-w-sm p-10 flex flex-col justify-center items-start space-y-2"
     >
       <FaBook className="text-blue-600 text-6xl self-center" />
       <span className="text-blue-700 font-medium">Liste des cours</span>
@@ -86,7 +86,7 @@ function EtudiantDashboard() {
 
     <Link
       to="/devoirs-et-soumission"
-      className="bg-white border border-green-600 shadow-md hover:shadow-xl transition rounded-xl w-full max-w-sm p-10 flex flex-col justify-center items-start space-y-2"
+      className="bg-white border border-green-600 shadow-md hover:shadow transition rounded-xl w-full max-w-sm p-10 flex flex-col justify-center items-start space-y-2"
     >
       <FaClipboardList className="text-green-600 text-6xl self-center" />
       <span className="text-green-700 font-medium">Liste des devoirs</span>
@@ -94,7 +94,7 @@ function EtudiantDashboard() {
 
     <Link
       to="/events"
-      className="bg-white border border-pink-600 shadow-md hover:shadow-xl transition rounded-xl w-full max-w-sm p-10 flex flex-col justify-center items-start space-y-2"
+      className="bg-white border border-pink-600 shadow-md hover:shadow transition rounded-xl w-full max-w-sm p-10 flex flex-col justify-center items-start space-y-2"
     >
       <FaCalendarAlt className="text-pink-600 text-6xl self-center" />
       <span className="text-pink-700 font-medium">Liste des événements</span>
@@ -102,7 +102,7 @@ function EtudiantDashboard() {
 
     <Link
       to="/devoirs-et-soumission"
-      className="bg-white border border-blue-600 shadow-md hover:shadow-xl transition rounded-xl w-full max-w-sm p-10 flex flex-col justify-center items-start space-y-2"
+      className="bg-white border border-blue-600 shadow-md hover:shadow transition rounded-xl w-full max-w-sm p-10 flex flex-col justify-center items-start space-y-2"
     >
       <FaClock className="text-blue-600 text-6xl self-center" />
       <span className="text-blue-700 font-medium">Soumettre un devoir</span>
@@ -111,7 +111,7 @@ function EtudiantDashboard() {
 
     <Link
       to="/mes-soumissions"
-      className="bg-white border border-green-600 shadow-md hover:shadow-xl transition rounded-xl w-full max-w-sm p-10 flex flex-col justify-center items-start space-y-2"
+      className="bg-white border border-green-600 shadow-md hover:shadow transition rounded-xl w-full max-w-sm p-10 flex flex-col justify-center items-start space-y-2"
     >
       <FaCheckCircle className="text-green-600 text-6xl self-center" />
       <span className="text-green-700 font-medium">Mes soumessions </span>
@@ -120,7 +120,7 @@ function EtudiantDashboard() {
 
     <Link
       to="/emploie-de-temps"
-      className="bg-white border border-pink-600 shadow-md hover:shadow-xl transition rounded-xl w-full max-w-sm p-10 flex flex-col justify-center items-start space-y-2"
+      className="bg-white border border-pink-600 shadow-md hover:shadow transition rounded-xl w-full max-w-sm p-10 flex flex-col justify-center items-start space-y-2"
     >
       <FaRegCalendarCheck className="text-pink-600 text-6xl self-center" />
       <span className="text-pink-700 font-medium">Emploie de Temps </span>
@@ -129,7 +129,7 @@ function EtudiantDashboard() {
 
     <Link
   to="/chat-ai"
-  className="bg-white shadow-md hover:shadow-xl border border-indigo-600 transition rounded-xl w-full max-w-sm p-4 flex flex-col justify-center items-start space-y-2"
+  className="bg-white shadow-md hover:shadow border border-indigo-600 transition rounded-xl w-full max-w-sm p-4 flex flex-col justify-center items-start space-y-2"
 >
 <FaRobot className="text-6xl m-auto text-indigo-600" />
   <h3 className="text-lg font-semibold text-indigo-600">Assistant IA</h3>
