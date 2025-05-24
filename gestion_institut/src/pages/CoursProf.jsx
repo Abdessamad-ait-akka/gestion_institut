@@ -34,7 +34,7 @@ import SchoolIcon from "@mui/icons-material/School"
 import GroupsIcon from "@mui/icons-material/Groups"
 import CategoryIcon from "@mui/icons-material/Category"
 
-// Animations
+
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -45,7 +45,6 @@ const scaleIn = keyframes`
   to { transform: scale(1); opacity: 1; }
 `
 
-// Styles personnalisés
 const GradientPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
   borderRadius: 12,
@@ -267,15 +266,14 @@ const CoursProf = () => {
   const [editingCourseId, setEditingCourseId] = useState(null)
   const fileInputRef = useRef(null)
 
-  // Données de démonstration pour les groupes et filières
-  const groupes = ["Groupe A", "Groupe B", "Groupe C", "Groupe D"]
-  const filieres = ["Informatique", "Mathématiques", "Physique", "Chimie", "Biologie"]
+  const groupes = ["G1", "G2", "G3", "G4", "G5"]
+  const filieres= ["Genie Informatique", "Genie logicielle", "Genie Electriqie", "Technique et Management"]
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Validation
+
     if (!titre || !groupe || !filiere) {
       alert("Veuillez remplir tous les champs obligatoires")
       setIsSubmitting(false)

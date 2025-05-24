@@ -40,6 +40,7 @@ const initialProf = {
   groupe: "",
   matiere: "",
 };
+import axios from "axios";
 
 const ProfDashboard = () => {
   const theme = useTheme();
@@ -56,19 +57,17 @@ const ProfDashboard = () => {
     searchTerm: "",
   });
 
+
   // Simulated API call
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const mockData = [
-          { nom: "Ait Lahcen", prenom: "Imad", email: "imad@ent.ma", password: "••••••", matiere: "React", filiere: "Génie Informatique", groupe: "G6" },
-          { nom: "Benali", prenom: "Samira", email: "samira@ent.ma", password: "••••••",matiere: "Laravel", filiere: "Génie Civil", groupe: "G3" },
-        ];
-        setState(prev => ({ ...prev, Prof: mockData, loading: false }));
+        const res = await axios.get("http://localhost:5000/api/professeurs");
+        handleStateUpdate("Prof", res.data);
       } catch (error) {
-        handleSnackbarOpen("Erreur de chargement des données", "error");
-        setState(prev => ({ ...prev, loading: false }));
+        handleSnackbarOpen("Erreur de chargement des professeurs", "error");
+      } finally {
+        handleStateUpdate("loading", false);
       }
     };
     fetchData();
@@ -94,28 +93,46 @@ const ProfDashboard = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!validateForm()) return;
   
-    const { Prof, isEdit, editIndex, formData } = state;
-    const updatedProf = [...Prof];
-    const action = isEdit ? "modifié" : "ajouté";
+    const { isEdit, editIndex, formData, Prof } = state;
+    const url = "http://localhost:5000/api/professeurs";
   
-    if (isEdit) {
-      updatedProf[editIndex] = formData;
-    } else {
-      updatedProf.push({ ...formData, password: "••••••" });
+    try {
+      let res;
+      if (isEdit) {
+        const id = Prof[editIndex]._id;
+        res = await axios.put(`${url}/${id}`, formData);
+      } else {
+        res = await axios.post(url, formData);
+      }
+  
+      const updatedList = isEdit
+        ? [...Prof.slice(0, editIndex), res.data, ...Prof.slice(editIndex + 1)]
+        : [...Prof, res.data];
+  
+      handleStateUpdate("Prof", updatedList);
+      handleDialogClose();
+      handleSnackbarOpen(`Prof ${isEdit ? "modifié" : "ajouté"} avec succès`, "success");
+  
+    } catch (error) {
+      handleSnackbarOpen("Erreur lors de l'enregistrement", "error");
     }
-  
-    handleStateUpdate("Prof", updatedProf); // ✅ ici était l'erreur
-    handleDialogClose();
-    handleSnackbarOpen(`Prof ${action} avec succès`, "success");
   };
-  const handleDeleteConfirm = (index) => {
-    const updated = state.Prof.filter((_, i) => i !== index);
-    handleStateUpdate("Prof", updated);
-    handleStateUpdate("deleteConfirm", { open: false, index: null });
-    handleSnackbarOpen("Prof supprimé avec succès", "success");
+  const handleDeleteConfirm = async (index) => {
+    const id = state.Prof[index]._id;
+  
+    try {
+      await axios.delete(`http://localhost:5000/api/professeurs/${id}`);
+      const updated = state.Prof.filter((_, i) => i !== index);
+      handleStateUpdate("Prof", updated);
+      handleSnackbarOpen("Prof supprimé avec succès", "success");
+    } catch (error) {
+      handleSnackbarOpen("Erreur lors de la suppression", "error");
+    } finally {
+      handleStateUpdate("deleteConfirm", { open: false, index: null });
+    }
   };
 
   const handleDialogClose = () => {
@@ -130,7 +147,7 @@ const ProfDashboard = () => {
       nom: row.nom || "",
       prenom: row.prenom || "",
       email: row.email || "",
-      password: "", // On ne réaffiche jamais l’ancien mot de passe
+      password: "", 
       filiere: row.filiere || "",
       groupe: row.groupe || "",
       matiere: row.matiere || "",

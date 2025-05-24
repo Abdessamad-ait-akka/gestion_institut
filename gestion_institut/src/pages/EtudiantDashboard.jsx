@@ -38,12 +38,14 @@ const initialEtudiant = {
   password: "",
   filiere: "",
   groupe: "",
+  matiere: "",
 };
+import axios from "axios";
 
 const EtudiantDashboard = () => {
   const theme = useTheme();
   const [state, setState] = useState({
-    etudiants: [],
+    Etudiant: [],
     openDialog: false,
     formData: initialEtudiant,
     isEdit: false,
@@ -55,19 +57,17 @@ const EtudiantDashboard = () => {
     searchTerm: "",
   });
 
+
   // Simulated API call
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const mockData = [
-          { nom: "Ait Lahcen", prenom: "Imad", email: "imad@ent.ma", password: "••••••", filiere: "Génie Informatique", groupe: "G6" },
-          { nom: "Benali", prenom: "Samira", email: "samira@ent.ma", password: "••••••", filiere: "Génie Civil", groupe: "G3" },
-        ];
-        setState(prev => ({ ...prev, etudiants: mockData, loading: false }));
+        const res = await axios.get("http://localhost:5000/api/etudiants");
+        handleStateUpdate("Etudiant", res.data);
       } catch (error) {
-        handleSnackbarOpen("Erreur de chargement des données", "error");
-        setState(prev => ({ ...prev, loading: false }));
+        handleSnackbarOpen("Erreur de chargement des etudiants", "error");
+      } finally {
+        handleStateUpdate("loading", false);
       }
     };
     fetchData();
@@ -93,29 +93,46 @@ const EtudiantDashboard = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!validateForm()) return;
-
-    const { etudiants, isEdit, editIndex, formData } = state;
-    const updatedEtudiants = [...etudiants];
-    const action = isEdit ? "modifié" : "ajouté";
-
-    if (isEdit) {
-      updatedEtudiants[editIndex] = formData;
-    } else {
-      updatedEtudiants.push({ ...formData, password: "••••••" });
+  
+    const { isEdit, editIndex, formData, Etudiant } = state;
+    const url = "http://localhost:5000/api/etudiants";
+  
+    try {
+      let res;
+      if (isEdit) {
+        const id = Etudiant[editIndex]._id;
+        res = await axios.put(`${url}/${id}`, formData);
+      } else {
+        res = await axios.post(url, formData);
+      }
+  
+      const updatedList = isEdit
+        ? [...Etudiant.slice(0, editIndex), res.data, ...Etudiant.slice(editIndex + 1)]
+        : [...Etudiant, res.data];
+  
+      handleStateUpdate("Etudiant", updatedList);
+      handleDialogClose();
+      handleSnackbarOpen(`Etudiant ${isEdit ? "modifié" : "ajouté"} avec succès`, "success");
+  
+    } catch (error) {
+      handleSnackbarOpen("Erreur lors de l'enregistrement", "error");
     }
-
-    handleStateUpdate("etudiants", updatedEtudiants);
-    handleDialogClose();
-    handleSnackbarOpen(`Étudiant ${action} avec succès`, "success");
   };
-
-  const handleDeleteConfirm = (index) => {
-    const updated = state.etudiants.filter((_, i) => i !== index);
-    handleStateUpdate("etudiants", updated);
-    handleStateUpdate("deleteConfirm", { open: false, index: null });
-    handleSnackbarOpen("Étudiant supprimé avec succès", "success");
+  const handleDeleteConfirm = async (index) => {
+    const id = state.Prof[index]._id;
+  
+    try {
+      await axios.delete(`http://localhost:5000/api/etudiants/${id}`);
+      const updated = state.Etudiant.filter((_, i) => i !== index);
+      handleStateUpdate("Etudiant", updated);
+      handleSnackbarOpen("Etudiant supprimé avec succès", "success");
+    } catch (error) {
+      handleSnackbarOpen("Erreur lors de la suppression", "error");
+    } finally {
+      handleStateUpdate("deleteConfirm", { open: false, index: null });
+    }
   };
 
   const handleDialogClose = () => {
@@ -126,7 +143,15 @@ const EtudiantDashboard = () => {
   };
 
   const handleEdit = (row, index) => {
-    handleStateUpdate("formData", row);
+    handleStateUpdate("formData", {
+      nom: row.nom || "",
+      prenom: row.prenom || "",
+      email: row.email || "",
+      password: "", 
+      filiere: row.filiere || "",
+      groupe: row.groupe || "",
+      matiere: row.matiere || "",
+    });
     handleStateUpdate("isEdit", true);
     handleStateUpdate("editIndex", index);
     handleStateUpdate("openDialog", true);
@@ -139,6 +164,7 @@ const EtudiantDashboard = () => {
     { key: "filiere", label: "Filière", minWidth: 180 },
     { key: "groupe", label: "Groupe", minWidth: 120, align: "center" },
     { key: "password", label: "Mot de passe", minWidth: 140 },
+    { key: "matiere", label: "Matiere", minWidth: 140 },
   ];
 
   const actions = [
@@ -146,34 +172,39 @@ const EtudiantDashboard = () => {
       label: "Modifier",
       icon: <EditIcon fontSize="small" />,
       color: "primary",
-      onClick: (row, index) => handleEdit(row, index),
+      onClick: (row) => {
+        const index = state.Etudiant.findIndex(p => p.email === row.email);
+        handleEdit(row, index);
+      },
     },
     {
       label: "Supprimer",
       icon: <DeleteIcon fontSize="small" />,
       color: "error",
-      onClick: (row, index) => handleStateUpdate("deleteConfirm", { open: true, index }),
+      onClick: (row) => {
+        const index = state.Etudiant.findIndex(p => p.email === row.email);
+        handleStateUpdate("deleteConfirm", { open: true, index });
+      },
     },
   ];
 
-  const filteredEtudiants = state.etudiants.filter(etudiant =>
-    Object.values(etudiant).some(val =>
+  const filteredEtudiants = state.Etudiant.filter(Etudiant =>
+    Object.values(Etudiant).some(val =>
       val?.toString().toLowerCase().includes(state.searchTerm.toLowerCase())
     )
   );
-
   return (
     <Paper sx={{ p: 4, m: 3, borderRadius: 4, boxShadow: theme.shadows[3] }}>
       <Box sx={{ mb: 4 }}>
         <Typography variant="h5" component="h1" gutterBottom sx={{ fontWeight: 600 }}>
-          Gestion des Étudiants
+          Gestion des Etudiants
         </Typography>
         <Divider sx={{ mb: 3 }} />
         
         <TextField
           fullWidth
           variant="outlined"
-          placeholder="Rechercher des étudiants..."
+          placeholder="Rechercher des etudiants..."
           value={state.searchTerm}
           onChange={(e) => handleStateUpdate("searchTerm", e.target.value)}
           InputProps={{
@@ -199,7 +230,7 @@ const EtudiantDashboard = () => {
           showActions
           showAddButton
           onAdd={() => handleStateUpdate("openDialog", true)}
-          addButtonLabel="Ajouter Étudiant"
+          addButtonLabel="Ajouter Etudiant"
           addButtonProps={{
             startIcon: <AddIcon />,
             variant: "contained",
@@ -244,12 +275,12 @@ const EtudiantDashboard = () => {
             {state.isEdit ? (
               <>
                 <EditIcon fontSize="small" />
-                <Typography variant="h6">Modifier l'Étudiant</Typography>
+                <Typography variant="h6">Modifier letudiant</Typography>
               </>
             ) : (
               <>
                 <AddIcon fontSize="small" />
-                <Typography variant="h6">Nouvel Étudiant</Typography>
+                <Typography variant="h6">Nouvel Etudiant</Typography>
               </>
             )}
           </Box>
