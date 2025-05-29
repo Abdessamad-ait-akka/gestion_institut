@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h2>Tableau de bord</h2>
+    <div class="user-info">
+        <p>Connecté en tant que <strong>{{ username }}</strong></p>
+        <p>Email: {{ email }}</p>
+    </div>
+    
+    <div class="actions">
+        <a href="{{ url_for('logout') }}" class="btn btn-danger">Déconnexion</a>
+    </div>
+</div>
+{% endblock %}

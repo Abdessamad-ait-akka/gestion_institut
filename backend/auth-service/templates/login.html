@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-box">
+        <h2>Connexion</h2>
+        
+        <div class="auth-methods">
+            <a href="{{ url_for('auth_keycloak') }}" class="btn keycloak-btn">
+                <img src="https://www.keycloak.org/resources/images/keycloak_logo_480x108.png" 
+                     alt="Keycloak" height="40">
+                Se connecter avec Keycloak
+            </a>
+        </div>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert alert-danger">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+</div>
+{% endblock %}
